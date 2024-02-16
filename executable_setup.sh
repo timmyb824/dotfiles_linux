@@ -83,6 +83,7 @@ fi
 echo_with_color "32" "Proceeding with all installations:"
 echo_with_color "32" "Installing 1password cli..."
 run_setup_scripts "installers/1password.sh"
+run_setup_scripts "installers/age_sops.sh"
 
 # Only run chezmoi scripts if not initialized
 if ! $CHEZMOI_INITIALIZED; then
