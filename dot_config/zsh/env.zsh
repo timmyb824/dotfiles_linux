@@ -7,7 +7,6 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin/
 export MICRO_TRUECOLOR=1
 export VAULT_ADDR="https://vault.local.timmybtech.com"
-export PATH="$HOME/.local/bin:$PATH"
 export KUBECONFIG="/home/timmyb824/.kube/config_k3s"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"

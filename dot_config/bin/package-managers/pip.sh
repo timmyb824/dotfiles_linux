@@ -2,15 +2,14 @@
 
 source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
-initialize_pip_macos() {
+initialize_pip_linux() {
     # Check for pip in the common installation locations
     if command_exists pip; then
         echo_with_color "32" "pip is already installed."
     else
         # Attempt to initialize pip if it's installed but not in the PATH
         if [[ -x "$HOME/.pyenv/shims/pip" ]]; then
-            echo_with_color "32" "Adding Homebrew Python to PATH for MacOS."
-            eval "$(/opt/homebrew/bin/brew shellenv)"
+            echo_with_color "32" "Adding pyenv Python to PATH."
             export PYENV_ROOT="$HOME/.pyenv"
             export PATH="$PYENV_ROOT/bin:$PATH"
             eval "$(pyenv init --path)"
@@ -53,6 +52,6 @@ install_pip_packages() {
     done < <(get_package_list pip)
 }
 
-initialize_pip_macos
+initialize_pip_linux
 confirm_python_and_pip
 install_pip_packages
