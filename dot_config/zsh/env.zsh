@@ -13,3 +13,4 @@ export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PATH="$HOME/.basher/bin:$PATH"
 export PATH="$HOME/.rbenv/bin:$PATH"
+export ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd history completion) # prevents an issue with autosuggestions and atuin where terminal line moves off screen

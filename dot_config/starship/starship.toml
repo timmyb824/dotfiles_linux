@@ -11,6 +11,9 @@ command_timeout = 3000
 success_symbol = " " # The "success_symbol" segment is being set to "➜" with the color "bold green i.e. [➜](bold green)"
 error_symbol = "[✖](bold red) "
 
+[line_break]
+disabled = false
+
 # Disable the package module, hiding it from the prompt completely
 [package]
 disabled = true

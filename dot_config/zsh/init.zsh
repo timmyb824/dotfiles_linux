@@ -1,7 +1,7 @@
 if [[ $TERM_PROGRAM != "WarpTerminal" ]]; then
     source <($HOME/.local/bin/starship init zsh --print-full-init) #pkgx
     export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
-    # eval "$(atuin init zsh)"
+    eval "$(atuin init zsh)"
     test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 fi
 
