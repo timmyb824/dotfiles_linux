@@ -29,7 +29,8 @@ run_script package-managers/basher.sh
 run_script package-managers/krew.sh
 run_script package-managers/micro.sh
 run_script package-managers/pipx.sh
-run_script package-managers/node_npm.sh
+run_script installers/fnm_node.sh
+run_script package-managers/npm.sh
 run_script installers/pyenv_python.sh
 run_script package-managers/pip.sh
 run_script installers/tfenv_terraform.sh
@@ -37,9 +38,7 @@ run_script installers/tailscale.sh
 run_script installers/rbenv_ruby.sh
 run_script installers/docker.sh
 run_script installers/zsh_shell.sh
-run_script installers/1password.sh
-run_script installers/age_sops.sh
-run_script configuration/age_secret.sh
+run_script installers/atuin.sh
 run_script configuration/go_directories.sh
 
 echo "All Linux packages have been installed."
