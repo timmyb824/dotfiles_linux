@@ -4,14 +4,17 @@ source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
 # Function to install pkgx
 install_pkgx() {
-    if command_exists brew; then
-        echo_with_color "34" "Installing pkgx using Homebrew..."
-        brew install pkgxdev/made/pkgx || exit_with_error "Installation of pkgx using Homebrew failed."
-    elif command_exists curl; then
+    if ! command_exists curl; then
+        echo_with_color "34" "Installing curl..."
+        sudo apt-get update || exit_with_error "Failed to update apt-get."
+        sudo apt-get install -y curl || exit_with_error "Installation of curl failed."
+    fi
+
+    if command_exists curl; then
         echo_with_color "34" "Installing pkgx using curl..."
         curl -Ssf https://pkgx.sh | sh || exit_with_error "Installation of pkgx using curl failed."
     else
-        exit_with_error "Homebrew and curl are not installed. Cannot install pkgx."
+        exit_with_error "curl is still not installed. Cannot install pkgx."
     fi
 }
 
