@@ -1,3 +1,4 @@
+export SOPS_AGE_KEY_FILE=$HOME/.sops/age-master-key.txt
 export EDITOR="micro" # pkgx
 export HOMEBREW_NO_ANALYTICS=1
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
