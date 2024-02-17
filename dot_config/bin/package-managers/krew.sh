@@ -2,6 +2,7 @@
 
 # Source the common functions script
 source "$(dirname "$BASH_SOURCE")/../init/init.sh"
+
 # Function to add krew to PATH for the current session if it's not already in the PATH
 add_krew_to_path_for_session() {
     local krew_path="${KREW_ROOT:-$HOME/.krew}/bin"
@@ -16,8 +17,7 @@ if ! kubectl krew &> /dev/null; then
     add_krew_to_path_for_session
     # Re-check if kubectl krew works after adding to PATH
     if ! kubectl krew &> /dev/null; then
-        echo_with_color "31" "krew is still not working after attempting to add to PATH"
-        exit 1
+        exit_with_error "krew is still not working after attempting to add to PATH"
     fi
 fi
 
@@ -30,8 +30,7 @@ while IFS= read -r plugin; do
             if kubectl krew install "$trimmed_plugin"; then
                 echo_with_color "32" "$trimmed_plugin installed successfully"
             else
-                echo_with_color "31" "Failed to install $trimmed_plugin"
-                exit 1
+                exit_with_error "Failed to install $trimmed_plugin"
             fi
         else
             echo_with_color "34" "$trimmed_plugin is already installed"
