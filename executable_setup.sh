@@ -111,13 +111,11 @@ else
 fi
 
 # if [[ "$CHEZMOI_INITIALIZED" == true ]] && ask_yes_or_no "Do you want to remove the chezmoi, sops, and age binaries?"; then
-if ask_yes_or_no "Do you want to remove the chezmoi, sops, and age binaries?"; then
+if ask_yes_or_no "Do you want to remove the chezmoi binary?"; then
     echo_with_color "34" "Removing chezmoi binary..."
     safe_remove_command "$CHEZMOI_BIN"
-    safe_remove_command "/usr/local/bin/sops"
-    safe_remove_command "/usr/local/bin/age"
 else
-    echo_with_color "34" "Skipping binaries removal."
+    echo_with_color "34" "Skipping binary removal."
 fi
 
 make_packaage_script_executable "install.sh"

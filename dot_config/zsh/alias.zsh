@@ -4,6 +4,7 @@ alias _=sudo
 alias btm="btm --color gruvbox"
 alias cat="bat"
 alias cd..="cd .."
+alias chez="chezmoi"
 alias fdn='find . -type d -name' # fd is a seperate command
 alias ff="find . -type f -name"
 alias gop="gitopolis"
