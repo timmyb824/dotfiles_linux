@@ -4,7 +4,7 @@ source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
 initialize_atuin() {
     echo_with_color "33" "Initializing atuin..."
-    eval "$(atuin init zsh)"
+    eval "$(atuin init "$(basename $SHELL)")"
 }
 
 if command_exists atuin; then
