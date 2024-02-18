@@ -2,55 +2,60 @@
 
 source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
+# Function to remove commands that were installed outside of Homebrew using apt but are now managed by Homebrew
+safe_remove_command_apt() {
+    local command_name="$1"
+
+    if command_exists "$command_name"; then
+        echo_with_color "$YELLOW_COLOR" "Removing $command_name..."
+        sudo apt remove --purge -y "$command_name" || exit_with_error "Failed to remove $command_name."
+    else
+        echo_with_color "$GREEN_COLOR" "$command_name is not installed."
+    fi
+}
+
 # Function to install Homebrew on macOS
-install_brew_macos() {
+install_brew_linux() {
     if ! command_exists brew; then
-        echo "Homebrew not found. Installing Homebrew..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        echo_with_color "$BLUE_COLOR" "Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || exit_with_error "Homebrew installation failed."
         add_brew_to_path
     else
-        echo "Homebrew is already installed."
+        echo_with_color "$GREEN_COLOR" "Homebrew is already installed."
     fi
 
-    if ! command_exists brew; then
-        exit_with_error "Homebrew installation failed or PATH setup was not successful."
-    fi
+    # Verify if Homebrew installation was successful and available
+    command_exists brew || exit_with_error "Homebrew installation failed or PATH setup was not successful."
 }
 
-# Function to update PATH for the current session
-add_brew_to_path() {
-    # Determine the system architecture for the correct Homebrew path
-    local BREW_PREFIX
-    if [[ "$(uname -m)" == "arm64" ]]; then
-        BREW_PREFIX="/opt/homebrew/bin"
-    else
-        BREW_PREFIX="/usr/local/bin"
-    fi
-
-    # Construct the Homebrew path line
-    local BREW_PATH_LINE="eval \"$(${BREW_PREFIX}/brew shellenv)\""
-
-    # Check if Homebrew PATH is already in the PATH
-    if ! echo "$PATH" | grep -q "${BREW_PREFIX}"; then
-        echo "Adding Homebrew to PATH for the current session..."
-        eval "${BREW_PATH_LINE}"
-    fi
-}
-
-# Prompt the user to install packages using Homebrew
+# Function to prompt the user for installing packages with Homebrew
 install_packages_with_brew() {
+    local temp_brewfile=$(mktemp)
+
     if ask_yes_or_no "Do you want to install the packages from the Brewfile?"; then
-        brew bundle --file="dot_config/bin/package-managers/Brewfile"
+        # Fetching the Brewfile content and writing to temporary file
+        get_package_list Brewfile > "$temp_brewfile" || exit_with_error "Failed to fetch Brewfile."
+
+        # Ensure that the temporary Brewfile has content before proceeding
+        if [ -s "$temp_brewfile" ]; then
+            echo_with_color "$BLUE_COLOR" "Installing packages from the Brewfile..."
+            brew bundle --file="$temp_brewfile" || exit_with_error "Failed to install packages using the Brewfile."
+        else
+            exit_with_error "The fetched Brewfile is empty."
+        fi
     else
-        echo "Skipping package installation."
+        echo_with_color "$YELLOW_COLOR" "Skipping package installation."
     fi
+
+    # Cleanup: Remove the temporary Brewfile regardless of earlier actions
+    rm "$temp_brewfile" || echo_with_color "$YELLOW_COLOR" "Warning: Failed to remove temporary Brewfile."
 }
 
-# Main execution for macOS
-if [[ "$(get_os)" == "macOS" ]]; then
-    safe_remove_command "/usr/local/bin/op"
-    install_brew_macos
-    install_packages_with_brew
-else
-    exit_with_error "This script is intended for use on macOS only."
-fi
+# Function to add Homebrew to PATH if it's not already there
+add_brew_to_path
+
+# Remove commands that were installed outside of Homebrew but are now managed by Homebrew
+safe_remove_command_apt "1password-cli"
+
+install_brew_linux
+install_packages_with_brew
