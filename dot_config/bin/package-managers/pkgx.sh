@@ -26,6 +26,7 @@ command_exists pkgx || exit_with_error "pkgx installation failed."
 
 # Fetch the list of packages to install
 packages=( $(get_package_list pkgx) )
+packages+=( $(get_package_list pkgx_linux) ) # Add Linux specific packages
 
 # Define binary paths
 mc_bin_path="$HOME/.local/bin/mc"

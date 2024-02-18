@@ -59,8 +59,6 @@ if [[ -z "${TF_VERSION}" ]]; then
     exit_with_error "TF_VERSION is not set. Please export TF_VERSION with the desired Terraform version."
 fi
 
-# Add local binary path to PATH (where unzip is installed which is required by tfenv)
-add_to_path "$HOME/.local/bin"
 
 # Check if Terraform is installed and working
 if ! terraform_version >/dev/null; then
