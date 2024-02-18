@@ -12,7 +12,7 @@ terraform_version() {
 }
 
 # Function to install tfenv on Linux
-tfenv_install_linux() {
+install_tfenv_linux() {
     if ! command_exists git; then
         exit_with_error "git not found. Please install git first."
     else
