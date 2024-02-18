@@ -19,22 +19,19 @@ install_pyenv_linux() {
 
 # Function to install and set up Python version using pyenv
 setup_python_version() {
-    if [ -z "${PYTHON_VERSION:-}" ]; then
-        exit_with_error "PYTHON_VERSION is not set. Please specify the Python version to install."
+    if pyenv install -s "${PYTHON_VERSION}"; then
+        echo_with_color "$GREEN_COLOR" "Python ${PYTHON_VERSION} installed successfully."
+    else
+        exit_with_error "Failed to install Python ${PYTHON_VERSION}, please check pyenv setup."
     fi
 
-    if pyenv install "$PYTHON_VERSION"; then
-        echo_with_color "$GREEN" "Python $PYTHON_VERSION installed successfully."
-
-        if pyenv global "$PYTHON_VERSION"; then
-            echo_with_color "$GREEN" "Python $PYTHON_VERSION is now in use."
-        else
-            exit_with_error "Failed to set Python $PYTHON_VERSION as global, please check pyenv setup."
-        fi
+    if pyenv global "${PYTHON_VERSION}"; then
+        echo_with_color "$GREEN_COLOR" "Python ${PYTHON_VERSION} is now in use."
     else
-        exit_with_error "Failed to install Python $PYTHON_VERSION, please check pyenv setup."
+        exit_with_error "Failed to set Python ${PYTHON_VERSION} as global, please check pyenv setup."
     fi
 }
+
 
 initialize_pyenv() {
     # Initialize pyenv for the current session
@@ -45,8 +42,12 @@ initialize_pyenv() {
 }
 
 # Main installation process
-if ! command_exists pyenv; then
-    echo_with_color "$YELLOW" "pyenv could not be found."
+if [ -z "${PYTHON_VERSION:-}" ]; then
+    exit_with_error "PYTHON_VERSION is not set. Please specify the Python version to install."
+fi
+
+if [ ! -f "$HOME/.pyenv/bin/pyenv" ]; then
+    echo_with_color "$YELLOW" "pyenv could not be found or the installation is incomplete."
 
     if ! command_exists sudo; then
         exit_with_error "sudo command is required but not found. Please install sudo first."
@@ -56,5 +57,7 @@ if ! command_exists pyenv; then
     initialize_pyenv
     setup_python_version
 else
-    echo_with_color "$GREEN" "pyenv is already installed."
+    echo_with_color "$GREEN" "pyenv is already installed and appears to be properly set up."
+    initialize_pyenv
+    setup_python_version
 fi
