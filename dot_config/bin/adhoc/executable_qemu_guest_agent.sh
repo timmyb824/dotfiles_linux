@@ -16,6 +16,8 @@ fi
 if ! systemctl is-enabled --quiet qemu-guest-agent; then
     echo_with_color "$GREEN_COLOR" "Enabling qemu-guest-agent..."
     sudo systemctl enable qemu-guest-agent || exit_with_error "Failed to enable qemu-guest-agent"
+else
+    echo_with_color "$GREEN_COLOR" "qemu-guest-agent is already enabled"
 fi
 
 if ! systemctl is-active --quiet qemu-guest-agent; then
