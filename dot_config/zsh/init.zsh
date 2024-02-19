@@ -1,5 +1,7 @@
 # PS4='+ ${BASH_SOURCE}:${LINENO}:${FUNCNAME[0]}:' # uncomment for debugging (run `set -x` to enable)
 
+FPATH="$HOME/.zsh/completion:${FPATH}"
+
 autoload -Uz compinit && compinit
 
 source <(pkgx --shellcode)  #docs.pkgx.sh/shellcode
