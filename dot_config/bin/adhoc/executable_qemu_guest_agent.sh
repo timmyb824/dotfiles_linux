@@ -2,6 +2,8 @@
 
 source "$(dirname "${BASH_SOURCE[0]}")/../init/init.sh"
 
+echo_with_color "$CYAN_COLOR" "PLEASE ENABLE QEMU-GUEST-AGENT WITHIN PROXMOX GUI OR AGENT WILL NOT START"
+
 # Update package lists
 echo_with_color "$GREEN_COLOR" "Updating package lists..."
 sudo apt-get update || exit_with_error "Failed to update package lists"
