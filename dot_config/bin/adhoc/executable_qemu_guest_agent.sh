@@ -16,7 +16,7 @@ fi
 if ! systemctl is-enabled --quiet qemu-guest-agent; then
     echo_with_color "$GREEN_COLOR" "Enabling qemu-guest-agent..."
     sudo systemctl enable qemu-guest-agent || exit_with_error "Failed to enable qemu-guest-agent"
-    echo_with_color "$GREEN_COLOR" "If just installed then restart the VM and start qemu-guest-agent"
+    echo_with_color "$GREEN_COLOR" "PLEASE ENABLE QEMU-GUEST-AGENT WITHIN PROXMOX GUI THE STOP AND START THE VM"
     exit 0
 else
     echo_with_color "$GREEN_COLOR" "qemu-guest-agent is already enabled"
