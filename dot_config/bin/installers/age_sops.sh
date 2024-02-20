@@ -6,7 +6,7 @@ source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 # Function to install sops on Linux
 install_sops_linux() {
     echo_with_color "$GREEN_COLOR" "Downloading sops binary for Linux..."
-    SOPS_BINARY="sops-${SOPS_VERSION}.linux"
+    SOPS_BINARY="sops-${SOPS_VERSION}.linux.amd64"
     SOPS_URL="https://github.com/mozilla/sops/releases/download/${SOPS_VERSION}/${SOPS_BINARY}"
 
     if curl -LO "$SOPS_URL"; then
