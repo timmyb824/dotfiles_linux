@@ -4,7 +4,7 @@ if command -v pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv virtualenv-init -)"
 fi
 
-eval "$(zoxide init zsh)" # pkgx
+eval "$(zoxide init --cmd cd zsh)" # pkgx
 eval "$(direnv hook zsh)" # pkgx
 eval "$(fnm env --use-on-cd)" # pkgx
 eval "$(basher init - zsh)"
