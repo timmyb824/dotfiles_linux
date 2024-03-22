@@ -30,6 +30,13 @@ EOF
     fi
 }
 
+if command_exists curl; then
+    echo_with_color "$GREEN_COLOR" "The 'curl' command is installed."
+else
+    echo_with_color "$BLUE_COLOR" "Installing the 'curl' command..."
+    sudo apt update && sudo apt install -y curl
+fi
+
 if ! command_exists op; then
     echo_with_color "$GREEN_COLOR" "Installing the 1Password CLI for Linux..."
     install_op_cli_linux
