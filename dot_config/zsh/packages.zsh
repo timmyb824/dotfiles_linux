@@ -13,6 +13,4 @@ eval "$(rbenv init - zsh)"
 
 source "$HOME/.config/broot/launcher/bash/br" # pkgx
 
-if [ -d "$HOME/.cargo" ]; then
-  . "$HOME/.cargo/env"
-fi
+

@@ -7,6 +7,10 @@ autoload -Uz compinit && compinit
 source <(pkgx --shellcode)  #docs.pkgx.sh/shellcode
 export PATH="$HOME/.local/bin:$PATH"
 
+if [ -d "$HOME/.cargo" ]; then
+  . "$HOME/.cargo/env"
+fi
+
 if [[ $TERM_PROGRAM != "WarpTerminal" ]]; then
     source <(starship init zsh --print-full-init) #pkgx
     export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
