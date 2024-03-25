@@ -95,10 +95,40 @@ install_podman() {
     echo_with_color "32" "Podman configuration completed successfully."
 }
 
+
+install_cni_plugin() {
+    if [[ "$(lsb_release -cs)" == "jammy" ]]; then
+        local cni_plugin_url="http://archive.ubuntu.com/ubuntu/pool/universe/g/containernetworking-plugins_1.1.1+ds1-3ubuntu0.23.10.2_amd64.deb"
+        local cni_plugin_deb="/tmp/containernetworking-plugins_1.1.1+ds1-3ubuntu0.23.10.2_amd64.deb"
+
+        if ! wget -O "$cni_plugin_deb" "$cni_plugin_url"; then
+            echo_with_color "31" "Failed to download CNI plugin package."
+            return 1
+        fi
+
+        if ! sudo dpkg -i "$cni_plugin_deb"; then
+            echo_with_color "31" "Failed to install CNI plugin package."
+            return 1
+        fi
+
+        echo_with_color "32" "CNI plugin package installed successfully."
+    else
+        echo_with_color "33" "Skipping CNI plugin installation as it is not supported on $(lsb_release -cs)."
+    fi
+}
+
+create_config_systemd_user_dir() {
+    local config_dir="$HOME/.config/systemd/user"
+    mkdir -p "$config_dir"
+    echo_with_color "32" "Created systemd user directory at $config_dir."
+}
+
 # Main script execution
 if check_podman_installed; then
     echo_with_color "32" "Skipping installation as Podman is already installed."
 else
     echo_with_color "33" "Podman is not installed. Installing Podman..."
     install_podman
+    install_cni_plugin
+    create_config_systemd_user_dir
 fi
