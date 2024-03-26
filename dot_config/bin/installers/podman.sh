@@ -47,6 +47,7 @@ install_podman() {
     #     return 1
     # fi
 
+    # Instruction from: https://software.opensuse.org//download.html?project=devel%3Akubic%3Alibcontainers%3Aunstable&package=podman
     # Add the repository for Podman from the Kubic project
     if ! echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/unstable/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:unstable.list; then
         echo "Failed to add the Podman repository to the sources list."
