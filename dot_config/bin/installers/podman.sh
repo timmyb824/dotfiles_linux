@@ -41,9 +41,33 @@ install_podman() {
         return 1
     fi
 
+    # # Install Podman (initial attempt)
+    # if ! sudo apt-get update || ! sudo apt-get install -y podman; then
+    #     echo_with_color "31" "Failed to install Podman."
+    #     return 1
+    # fi
+
+    # Add the repository for Podman from the Kubic project
+    if ! echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/unstable/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:unstable.list; then
+        echo "Failed to add the Podman repository to the sources list."
+        return 1
+    fi
+
+    # Import the GPG key for the repository
+    if ! curl -fsSL https://download.opensuse.org/repositories/devel:kubic:libcontainers:unstable/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/devel_kubic_libcontainers_unstable.gpg > /dev/null; then
+        echo "Failed to import the GPG key for the Podman repository."
+        return 1
+    fi
+
+    # Update the package database
+    if ! sudo apt update; then
+        echo "Failed to update the package database."
+        return 1
+    fi
+
     # Install Podman
-    if ! sudo apt-get update || ! sudo apt-get install -y podman; then
-        echo_with_color "31" "Failed to install Podman."
+    if ! sudo apt install -y podman; then
+        echo "Failed to install Podman."
         return 1
     fi
 
