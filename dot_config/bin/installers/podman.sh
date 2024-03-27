@@ -148,6 +148,32 @@ create_config_systemd_user_dir() {
     echo_with_color "32" "Created systemd user directory at $config_dir."
 }
 
+symlink_podman_to_docker() {
+    echo_with_color "33" "Symlinking Podman to Docker..."
+    read -p "Do you want to symlink Podman to Docker? [y/N]: " response
+    if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+        echo "Creating the symlink..."
+        if [ ! -S /run/podman/podman.sock ]; then
+            echo_with_color "31" "Podman socket does not exist. Please ensure Podman is installed and running."
+            return 1
+        fi
+        if [ -e /var/run/docker.sock ] || [ -L /var/run/docker.sock ]; then
+            echo_with_color "33" "Docker socket already exists. Please remove or rename it before symlinking."
+            return 1
+        fi
+        if sudo ln -s /run/podman/podman.sock /var/run/docker.sock; then
+            echo_with_color "32" "Podman symlinked to Docker successfully."
+            return 0
+        else
+            echo_with_color "31" "Failed to symlink Podman to Docker."
+            return 1
+        fi
+    else
+        echo_with_color "32" "Skipping symlink creation."
+        return 0
+    fi
+}
+
 # Main script execution
 if check_podman_installed; then
     echo_with_color "32" "Skipping installation as Podman is already installed."

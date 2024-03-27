@@ -21,9 +21,13 @@ rm -f "$HOME/.config/systemd/user/$UNIT_FILE"
 
 # Reload the daemon in case the file removal needs to be recognized
 systemctl --user daemon-reload
+systemctl --user reset-failed "$UNIT_FILE"
 
 # Stop and remove the container
-podman stop "$SERVICE_NAME"
-podman rm "$SERVICE_NAME"
+podman stop "$SERVICE_NAME" || echo "Container $SERVICE_NAME is not running."
+podman rm "$SERVICE_NAME" || echo "Container $SERVICE_NAME does not exist."
 
 echo "Service and container for $SERVICE_NAME have been removed."
+
+echo "Remaining user services:"
+systemctl --user list-units 'container*'

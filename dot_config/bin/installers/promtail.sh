@@ -70,29 +70,29 @@ positions:
   filename: /tmp/positions.yaml
 
 clients:
-  - url: ${LOKI_URL}
-    external_labels:
-      host: $(hostname)
+- url: ${LOKI_URL}
+  external_labels:
+    host: $(hostname)
 
 scrape_configs:
-  - job_name: system
-    static_configs:
-      - targets:
-          - localhost
-        labels:
-          job: syslog
-          __path__: /var/log/syslog
+- job_name: system
+  static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: syslog
+        __path__: /var/log/syslog
 
-  - job_name: journal
-    journal:
-      json: false
-      max_age: 12h
-      path: /var/log/journal
-    labels:
-      job: systemd-journal
-    relabel_configs:
-      - source_labels: ['__journal__systemd_unit']
-        target_label: 'unit'
+- job_name: journal
+  journal:
+    json: false
+    max_age: 12h
+    path: /var/log/journal
+  labels:
+    job: systemd-journal
+  relabel_configs:
+    - source_labels: ['__journal__systemd_unit']
+      target_label: 'unit'
 EOF
 }
 
