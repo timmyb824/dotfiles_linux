@@ -62,37 +62,38 @@ configure_promtail() {
 
     # Write the new Promtail configuration to the file
     sudo tee /etc/promtail/config.yml > /dev/null <<EOF
-server:
-  http_listen_port: 9080
-  grpc_listen_port: 0
+    server:
+      http_listen_port: 9080
+      grpc_listen_port: 0
 
-positions:
-  filename: /tmp/positions.yaml
+    positions:
+      filename: /tmp/positions.yaml
 
-clients:
-- url: ${LOKI_URL}
-  external_labels:
-    host: $(hostname)
+    clients:
+      - url: ${LOKI_URL}
+        external_labels:
+          host: $(hostname)
 
-scrape_configs:
-- job_name: system
-  static_configs:
-    - targets:
-        - localhost
-      labels:
-        job: syslog
-        __path__: /var/log/syslog
+    scrape_configs:
 
-- job_name: journal
-  journal:
-    json: false
-    max_age: 12h
-    path: /var/log/journal
-  labels:
-    job: systemd-journal
-  relabel_configs:
-    - source_labels: ['__journal__systemd_unit']
-      target_label: 'unit'
+    - job_name: system
+      static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: syslog
+          __path__: /var/log/syslog
+
+    - job_name: journal
+      journal:
+        json: false
+        max_age: 12h
+        path: /var/log/journal
+        labels:
+          job: systemd-journal
+      relabel_configs:
+        - source_labels: ['__journal__systemd_unit']
+          target_label: 'unit'
 EOF
 }
 
