@@ -38,6 +38,8 @@ export RUBY_VERSION="3.2.1"
 
 export PROMTAIL_VERSION="2.9.5"
 
+export ATUIN_USER="tbryant"
+
 ############# Global functions #############
 
 # Function to check if the current user is privileged
