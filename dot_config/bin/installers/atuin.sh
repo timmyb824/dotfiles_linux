@@ -4,12 +4,12 @@ source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
 initialize_atuin() {
     echo_with_color "$YELLOW_COLOR" "Initializing atuin..."
-    eval "$(atuin init "$(basename "$SHELL")")"
+    eval "$(atuin init bash)"
 }
 
 login_to_atuin() {
     if atuin status &> /dev/null; then
-        if atuin status | grep -q "session not found"; then
+        if atuin status | grep -q "cannot show sync status"; then
             echo_with_color "$YELLOW_COLOR" "atuin is not logged in."
             if atuin login -u "$ATUIN_USER"; then
                 echo_with_color "$GREEN_COLOR" "atuin login successful."
