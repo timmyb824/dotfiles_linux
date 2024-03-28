@@ -30,7 +30,7 @@ create_age_secret_key_credential() {
         # Attempt to read the age secret key and store it in a variable
         local age_secret_key_credential
         local age_secret_key_recipient
-        if age_secret_key_credential=$(op get item "$AGE_SECRET_KEY" --fields password 2>/dev/null) && age_secret_key_recipient=$(op get item "$AGE_RECIPIENT" --fields password 2>/dev/null); then
+        if age_secret_key_credential=$(op read "$AGE_SECRET_KEY" 2>/dev/null) && age_secret_key_recipient=$(op read "$AGE_RECIPIENT" 2>/dev/null); then
             # The heredoc delimiter must be unquoted to allow variable expansion.
             # Also, the delimiter must be at the beginning of the line with no leading whitespace.
             sudo tee "$AGE_SECRET_KEY_LOCATION" > /dev/null <<EOF
