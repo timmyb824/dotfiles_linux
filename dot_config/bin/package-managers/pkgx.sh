@@ -24,9 +24,15 @@ fi
 # Verify pkgx installation
 command_exists pkgx || exit_with_error "pkgx installation failed."
 
-# Fetch the list of packages to install
-packages=( $(get_package_list pkgx) )
-packages+=( $(get_package_list pkgx_linux) ) # Add Linux specific packages
+# Check if the current user is privileged and set the appropriate package list
+if is_privileged_user; then
+    # Fetch the list of all packages for privileged users
+    packages=( $(get_package_list pkgx) )
+    packages+=( $(get_package_list pkgx_linux) ) # Add Linux specific packages
+else
+    # Fetch the list of limited packages for non-privileged users
+    packages=( $(get_package_list pkgx_limited) )
+fi
 
 # Define binary paths
 mc_bin_path="$HOME/.local/bin/mc"
@@ -40,7 +46,8 @@ for package in "${packages[@]}"; do
 
     if [[ "$output" == *"pkgx: installed:"* ]]; then
         echo_with_color "$GREEN_COLOR" "${package} installed successfully"
-        if [[ "${package}" == "midnight-commander.org" ]]; then
+        # Check if the package is "midnight-commander.org", and user is privileged
+        if [[ "${package}" == "midnight-commander.org" ]] && is_privileged_user; then
             mv "$mc_bin_path" "$mcomm_bin_path" || exit_with_error "Failed to rename mc binary to mcomm."
             echo_with_color "$BLUE_COLOR" "Renamed mc binary to mcomm"
         fi

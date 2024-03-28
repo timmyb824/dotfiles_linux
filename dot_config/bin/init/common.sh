@@ -8,6 +8,12 @@ export BLUE_COLOR="34"
 export RED_COLOR="31"
 export CYAN_COLOR="36"
 
+# Store the username of the current user
+export CURRENT_USER=$(whoami)
+
+# Array of privileged users
+export PRIVILEGED_USERS=("tbryant" "timmyb824" "remoter")
+
 # Set the desired Node.js version
 export NODE_VERSION="21.0.0"
 
@@ -33,6 +39,16 @@ export RUBY_VERSION="3.2.1"
 export PROMTAIL_VERSION="2.9.5"
 
 ############# Global functions #############
+
+# Function to check if the current user is privileged
+is_privileged_user() {
+    for user in "${privileged_users[@]}"; do
+        if [[ "$current_user" == "$user" ]]; then
+            return 0 # The user is privileged
+        fi
+    done
+    return 1 # The user is not privileged
+}
 
 # Function to get a list of packages from a Gist
 function get_package_list() {
