@@ -9,7 +9,8 @@ export RED_COLOR="31"
 export CYAN_COLOR="36"
 
 # Store the username of the current user
-export CURRENT_USER=$(whoami)
+CURRENT_USER=$(whoami)
+export CURRENT_USER
 
 # Array of privileged users
 export PRIVILEGED_USERS=("tbryant" "timmyb824" "remoter")
@@ -44,8 +45,8 @@ export ATUIN_USER="tbryant"
 
 # Function to check if the current user is privileged
 is_privileged_user() {
-    for user in "${privileged_users[@]}"; do
-        if [[ "$current_user" == "$user" ]]; then
+    for user in "${PRIVILEGED_USERS[@]}"; do
+        if [[ "$CURRENT_USER" == "$user" ]]; then
             return 0 # The user is privileged
         fi
     done
@@ -154,7 +155,7 @@ ask_for_input() {
 # General function to check if a command is available
 check_command() {
     local cmd="$1"
-    if ! command -v "$cmd" &> /dev/null; then
+    if ! command_exists "$cmd"; then
         echo_with_color "31" "$cmd could not be found"
         return 1
     else

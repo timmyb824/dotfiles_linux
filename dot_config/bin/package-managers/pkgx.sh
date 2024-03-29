@@ -15,6 +15,25 @@ install_pkgx() {
     curl -Ssf https://pkgx.sh | sh || exit_with_error "Installation of pkgx using curl failed."
 }
 
+# Function to prompt user for package list
+prompt_for_package_list() {
+    echo_with_color "$CYAN_COLOR" "Please select the package list you want to install:"
+    echo "1) pkgx_code_server.list"
+    echo "2) pkgx_work.list"
+    echo "3) pkgx_personal.list"
+    echo "4) pkgx_linux.list"
+    read -p "Enter the number (1-4): " choice
+
+    case $choice in
+        1) package_list="pkgx_code_server.list" ;;
+        2) package_list="pkgx_work.list" ;;
+        3) package_list="pkgx_personal.list" ;;
+        4) package_list="pkgx_linux.list" ;;
+        *) echo_with_color "$RED_COLOR" "Invalid selection. Exiting."
+           exit 1 ;;
+    esac
+}
+
 # Install pkgx if it's not already available
 if ! command_exists pkgx; then
     echo_with_color "$RED_COLOR" "pkgx could not be found"
@@ -24,15 +43,11 @@ fi
 # Verify pkgx installation
 command_exists pkgx || exit_with_error "pkgx installation failed."
 
-# Check if the current user is privileged and set the appropriate package list
-if is_privileged_user; then
-    # Fetch the list of all packages for privileged users
-    packages=( $(get_package_list pkgx) )
-    packages+=( $(get_package_list pkgx_linux) ) # Add Linux specific packages
-else
-    # Fetch the list of limited packages for non-privileged users
-    packages=( $(get_package_list pkgx_limited) )
-fi
+# Prompt user for the package list
+prompt_for_package_list
+
+# Fetch the selected package list
+packages=( $(get_package_list "$package_list") )
 
 # Define binary paths
 mc_bin_path="$HOME/.local/bin/mc"
