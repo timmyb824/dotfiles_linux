@@ -55,7 +55,7 @@ is_privileged_user() {
 
 # Function to get a list of packages from a Gist
 get_package_list() {
-    local package_list_name="$1.list"
+    local package_list_name="$1"
     local gist_url="https://gist.githubusercontent.com/timmyb824/807597f33b14eceeb26e4e6f81d45962/raw/${package_list_name}"
 
     # Fetch the package list, remove comments, and trim whitespace
