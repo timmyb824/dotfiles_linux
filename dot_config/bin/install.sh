@@ -47,6 +47,8 @@ declare -a scripts_to_run=(
     "installers/docker.sh"
     "installers/zsh_shell.sh"
     "installers/atuin.sh"
+    "installers/podman.sh"
+    "installers/promtail.sh"
     "configuration/go_directories.sh"
     "configuration/mount_nas.sh"
 )
