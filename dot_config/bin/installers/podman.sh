@@ -123,7 +123,7 @@ install_podman() {
 
 install_cni_plugin() {
     if [[ "$(lsb_release -cs)" == "jammy" ]]; then
-        local cni_plugin_url="http://archive.ubuntu.com/ubuntu/pool/universe/g/containernetworking-plugins_1.1.1+ds1-3ubuntu0.23.10.2_amd64.deb"
+        local cni_plugin_url="http://archive.ubuntu.com/ubuntu/pool/universe/g/golang-github-containernetworking-plugins/containernetworking-plugins_1.1.1+ds1-3ubuntu0.23.10.2_amd64.deb"
         local cni_plugin_deb="/tmp/containernetworking-plugins_1.1.1+ds1-3ubuntu0.23.10.2_amd64.deb"
 
         if ! wget -O "$cni_plugin_deb" "$cni_plugin_url"; then
