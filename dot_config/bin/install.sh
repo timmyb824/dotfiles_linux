@@ -48,6 +48,7 @@ declare -a scripts_to_run=(
     "installers/zsh_shell.sh"
     "installers/atuin.sh"
     "configuration/go_directories.sh"
+    "configuration/mount_nas.sh"
 )
 
 # Iterate through the scripts and run them
