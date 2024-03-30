@@ -35,7 +35,7 @@ install_package_with_basher() {
 }
 
 # Get the list of packages from the gist
-package_list=$(get_package_list basher)
+package_list=$(get_package_list basher.list)
 
 # Check if the package list is retrieved successfully
 if [ -z "$package_list" ]; then
