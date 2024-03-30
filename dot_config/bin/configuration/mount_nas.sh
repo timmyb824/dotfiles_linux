@@ -11,7 +11,7 @@ EXPECTED_USER="$USER"
 echo_with_color "$BLUE_COLOR" "UPDATE SHARED FOLDER RULE WITH IP OF THE VM IN THE SYNOLOGY NAS OR THIS WILL FAIL."
 
 # Check if we can cd into the directory or if it is not empty
-if [ -d "$MOUNT_POINT" ] && cd "$MOUNT_POINT" && [ -z "$(ls -A "$MOUNT_POINT")" ]; then
+if [ -d "$MOUNT_POINT" ] && cd "$MOUNT_POINT" && [ "$(ls -A "$MOUNT_POINT")" ]; then
     echo_with_color "$BLUE_COLOR" "$MOUNT_POINT is already mounted and accessible."
     exit 0
 fi
