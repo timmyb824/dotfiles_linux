@@ -22,4 +22,4 @@ while IFS= read -r package; do
     if [ -n "$trimmed_package" ]; then
         install_micro_plugin "$trimmed_package"
     fi
-done < <(get_package_list micro_plugins)
+done < <(get_package_list micro_plugins.list)

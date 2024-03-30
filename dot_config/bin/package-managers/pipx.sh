@@ -14,7 +14,7 @@ install_pipx_packages() {
         else
             exit_with_error "Failed to install ${package}."
         fi
-    done < <(get_package_list pipx)
+    done < <(get_package_list pipx.list)
     echo_with_color "$GREEN_COLOR" "All pipx packages installed successfully."
 }
 

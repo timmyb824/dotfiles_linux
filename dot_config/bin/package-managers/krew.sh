@@ -45,4 +45,4 @@ while IFS= read -r plugin; do
     if [ -n "$trimmed_plugin" ]; then # Ensure the line is not empty
         install_krew_plugin "$trimmed_plugin"
     fi
-done < <(get_package_list krew)
+done < <(get_package_list krew.list)

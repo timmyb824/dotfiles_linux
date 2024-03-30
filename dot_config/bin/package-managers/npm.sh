@@ -37,7 +37,7 @@ install_npm_packages() {
                 exit_with_error "Failed to install ${trimmed_package}"
             fi
         fi
-    done < <(get_package_list npm)
+    done < <(get_package_list npm.list)
 
     echo_with_color "$GREEN_COLOR" "All npm packages installed successfully."
 }
