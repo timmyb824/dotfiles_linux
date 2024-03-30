@@ -10,14 +10,10 @@ EXPECTED_USER="$USER"
 
 echo_with_color "$BLUE_COLOR" "UPDATE SHARED FOLDER RULE WITH IP OF THE VM IN THE SYNOLOGY NAS OR THIS WILL FAIL."
 
-# Check if mount folder exists already and exit if it doesn't have correct permissions
+# Check if we can cd into the directory or if it is not empty
 if [ -d "$MOUNT_POINT" ]; then
-    folder_owner=$(stat -c '%U' "$MOUNT_POINT")
-    folder_group=$(stat -c '%G' "$MOUNT_POINT")
-    if [ "$folder_owner" != "$EXPECTED_USER" ] || [ "$folder_group" != "$EXPECTED_USER" ]; then
-        exit_with_error "$MOUNT_POINT already exists and does not have the correct permissions (owner/group should be $EXPECTED_USER)."
-    else
-        exit_with_error "$MOUNT_POINT already exists and is owned by the expected user ($EXPECTED_USER)."
+    if ! cd "$MOUNT_POINT" || [ "$(ls -A "$MOUNT_POINT")" ]; then
+        exit_with_error "$MOUNT_POINT cannot be accessed or is not empty."
     fi
 fi
 
@@ -43,13 +39,17 @@ if ! sudo mount -t nfs -o vers=4 "$NAS_IP:$NAS_SHARE" "$MOUNT_POINT"; then
 fi
 echo_with_color "$GREEN_COLOR" "Successfully mounted the NFS share $NAS_SHARE from $NAS_IP."
 
-echo_with_color "$BLUE_COLOR" "Changing ownership of $MOUNT_POINT (this may take a moment)..."
-if ! sudo chown -R "$EXPECTED_USER:$EXPECTED_USER" "$MOUNT_POINT"; then
-    exit_with_error "Failed to change ownership of $MOUNT_POINT."
+# Check if the expected user has access to the directory after mounting
+if [ "$(stat -c '%U' "$MOUNT_POINT")" != "$EXPECTED_USER" ]; then
+    echo_with_color "$BLUE_COLOR" "Changing ownership of $MOUNT_POINT to $EXPECTED_USER..."
+    if ! sudo chown "$EXPECTED_USER:$EXPECTED_USER" "$MOUNT_POINT"; then
+        exit_with_error "Failed to change ownership of $MOUNT_POINT."
+    fi
+    echo_with_color "$GREEN_COLOR" "Successfully changed ownership of $MOUNT_POINT."
 fi
-echo_with_color "$GREEN_COLOR" "Successfully changed ownership of $MOUNT_POINT."
 
 echo_with_color "$BLUE_COLOR" "Setting permissions for $MOUNT_POINT..."
+# Only change the permissions of the folder itself, not recursively
 if ! sudo chmod 755 "$MOUNT_POINT"; then
     exit_with_error "Failed to set permissions for $MOUNT_POINT."
 fi
