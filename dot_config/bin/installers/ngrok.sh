@@ -2,7 +2,7 @@
 
 source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
-install_nrok_cli_linux() {
+install_ngrok_cli_linux() {
     # Install the ngrok CLI using the new steps provided
     if ! sudo sh -c 'curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
 	| tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null \
