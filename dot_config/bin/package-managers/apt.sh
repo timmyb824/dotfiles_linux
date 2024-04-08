@@ -5,6 +5,8 @@ source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 install_apt_packages() {
     echo_with_color "$CYAN_COLOR" "Installing apt packages..."
 
+    sudo apt update || exit_with_error "Failed to update apt package list"
+
     while IFS= read -r package; do
         trimmed_package=$(echo "$package" | xargs)  # Trim whitespace from the package name
         if [ -n "$trimmed_package" ]; then  # Ensure the line is not empty
