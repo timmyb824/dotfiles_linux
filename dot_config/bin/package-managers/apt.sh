@@ -15,8 +15,6 @@ install_apt_packages() {
             fi
         fi
     done < <(get_package_list apt.list)
-
-    echo_with_color "$GREEN_COLOR" "All apt packages installed successfully."
 }
 
 # Ensure apt is installed
