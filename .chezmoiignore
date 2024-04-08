@@ -1,5 +1,6 @@
 # global
 .DS_Store
+setup.sh
 
 # nvim
 /Users/timothybryant/.config/nvim/LICENSE,md
