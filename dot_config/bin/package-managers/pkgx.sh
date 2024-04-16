@@ -22,17 +22,21 @@ prompt_for_package_list() {
     echo "2) pkgx_work.list"
     echo "3) pkgx_personal.list"
     echo "4) pkgx_linux.list"
-    read -p "Enter the number (1-4): " choice
+    echo "5) pkgx_linux_init.list"
+    echo "6) pkgx_linux_all.list"
+    read -p "Enter the number (1-6): " choice
 
     case $choice in
-        1) package_list="pkgx_code_server.list" ;;
-        2) package_list="pkgx_work.list" ;;
-        3) package_list="pkgx_personal.list" ;;
-        4) package_list="pkgx_linux_all.list" ;;
-        5) package_list="pkgx_linux_init.list" ;;
-        6) package_list="pkgx_linux.list" ;;
-        *) echo_with_color "$RED_COLOR" "Invalid selection. Exiting."
-           exit 1 ;;
+    1) package_list="pkgx_code_server.list" ;;
+    2) package_list="pkgx_work.list" ;;
+    3) package_list="pkgx_personal.list" ;;
+    4) package_list="pkgx_linux_all.list" ;;
+    5) package_list="pkgx_linux_init.list" ;;
+    6) package_list="pkgx_linux.list" ;;
+    *)
+        echo_with_color "$RED_COLOR" "Invalid selection. Exiting."
+        exit 1
+        ;;
     esac
 }
 
@@ -49,7 +53,7 @@ command_exists pkgx || exit_with_error "pkgx installation failed."
 prompt_for_package_list
 
 # Fetch the selected package list
-packages=( $(get_package_list "$package_list") )
+packages=($(get_package_list "$package_list"))
 
 # Define binary paths
 mc_bin_path="$HOME/.local/bin/mc"
