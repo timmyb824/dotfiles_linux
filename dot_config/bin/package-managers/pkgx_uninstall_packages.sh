@@ -12,10 +12,12 @@ prompt_for_package_list() {
     read -p "Enter the number (1-4): " choice
 
     case $choice in
-    1) package_list="pkgx_code_server.list" ;;
-    2) package_list="pkgx_work.list" ;;
-    3) package_list="pkgx_personal.list" ;;
-    4) package_list="pkgx_linux.list" ;;
+        1) package_list="pkgx_code_server.list" ;;
+        2) package_list="pkgx_work.list" ;;
+        3) package_list="pkgx_personal.list" ;;
+        4) package_list="pkgx_linux_all.list" ;;
+        5) package_list="pkgx_linux_init.list" ;;
+        6) package_list="pkgx_linux.list" ;;
     *)
         echo_with_color "$RED_COLOR" "Invalid selection. Exiting."
         exit 1

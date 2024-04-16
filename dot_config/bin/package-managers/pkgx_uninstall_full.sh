@@ -17,6 +17,8 @@ prompt_for_package_list() {
     echo "2) pkgx_work.list"
     echo "3) pkgx_personal.list"
     echo "4) pkgx_linux.list"
+    echo "5) pkgx_linux_init.list"
+    echo "6) pkgx_linux_all.list"
     read -p "Enter the number (1-4): " choice
 
     case $choice in
