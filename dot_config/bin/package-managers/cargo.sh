@@ -14,7 +14,7 @@ install_cargo_packages() {
                 exit_with_error "Failed to install ${trimmed_package}"
             fi
         fi
-    done < <(get_package_list cargo.list)
+    done < <(get_package_list cargo_linux.list)
 }
 
 initialize_cargo() {
