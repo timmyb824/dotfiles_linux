@@ -8,7 +8,7 @@ install_cargo_packages() {
     while IFS= read -r package; do
         trimmed_package=$(echo "$package" | xargs)  # Trim whitespace from the package name
         if [ -n "$trimmed_package" ]; then  # Ensure the line is not empty
-            if cargo install "$trimmed_package"; then
+            if cargo install --locked "$trimmed_package"; then
                 echo_with_color "$GREEN_COLOR" "${trimmed_package} installed successfully"
             else
                 exit_with_error "Failed to install ${trimmed_package}"
