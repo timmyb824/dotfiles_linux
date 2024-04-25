@@ -3,7 +3,7 @@
 source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
 install_go_packages() {
-    echo_with_color "$CYAN_COLOR" "Installing cargo packages..."
+    echo_with_color "$CYAN_COLOR" "Installing go packages..."
 
     while IFS= read -r package; do
         trimmed_package=$(echo "$package" | xargs)  # Trim whitespace from the package name
@@ -14,7 +14,7 @@ install_go_packages() {
                 exit_with_error "Failed to install ${trimmed_package}"
             fi
         fi
-    done < <(get_package_list go_get.list)
+    done < <(get_package_list go_linux.list)
 }
 
 
