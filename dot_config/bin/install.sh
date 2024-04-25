@@ -31,6 +31,7 @@ SCRIPT_DIR="dot_config/bin"
 
 # An array of scripts to run, for cleaner management and scalability
 declare -a scripts_to_run=(
+    "package-managers/apt.sh"
     "package-managers/pkgx.sh"
     "package-managers/basher.sh"
     "package-managers/krew.sh"
@@ -44,12 +45,15 @@ declare -a scripts_to_run=(
     "installers/tailscale.sh"
     "installers/rbenv_ruby.sh"
     "installers/rust.sh"
+    "package-managers/cargo.sh"
     "installers/docker.sh"
     "installers/zsh_shell.sh"
     "installers/atuin.sh"
+    "installers/ngrok.sh"
     "installers/podman.sh"
     "installers/promtail.sh"
     "configuration/go_directories.sh"
+    "package-managers/go.sh"
     "configuration/mount_nas.sh"
 )
 
