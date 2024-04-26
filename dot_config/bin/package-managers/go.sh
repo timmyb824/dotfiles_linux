@@ -8,17 +8,18 @@ install_go_packages() {
     while IFS= read -r package; do
         trimmed_package=$(echo "$package" | xargs)  # Trim whitespace from the package name
         if [ -n "$trimmed_package" ]; then  # Ensure the line is not empty
-            if go install "$trimmed_package"; then
-                echo_with_color "$GREEN_COLOR" "${trimmed_package} installed successfully"
+            output=$(go install "$trimmed_package" 2>&1)
+            if [[ "$output" == *"Error"* ]]; then
+                echo_with_color "$RED_COLOR" "Error: An unexpected error occurred while trying to install ${trimmed_package}: $output"
+                echo_with_color "$YELLOW_COLOR" "Continuing with the next package..."
             else
-                exit_with_error "Failed to install ${trimmed_package}"
+                echo_with_color "$GREEN_COLOR" "${trimmed_package} installed successfully."
             fi
         fi
     done < <(get_package_list go_linux.list)
 }
 
-
-attempt_fix_command "go" "$HOME/.local/bin"
+# attempt_fix_command "go" "$HOME/.local/bin"
 
 if command_exists go; then
     echo_with_color "$CYAN_COLOR" "Go is installed, installing go packages..."
