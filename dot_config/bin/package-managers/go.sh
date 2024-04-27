@@ -19,7 +19,7 @@ install_go_packages() {
     done < <(get_package_list go_linux.list)
 }
 
-# attempt_fix_command "go" "$HOME/.local/bin"
+attempt_fix_command "go" "$HOME/.local/bin"
 
 if command_exists go; then
     echo_with_color "$CYAN_COLOR" "Go is installed, installing go packages..."
