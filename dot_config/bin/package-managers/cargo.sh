@@ -9,6 +9,7 @@ install_cargo_packages() {
         trimmed_package=$(echo "$package" | xargs)  # Trim whitespace from the package name
         if [ -n "$trimmed_package" ]; then  # Ensure the line is not empty
             output=$(cargo install "$trimmed_package" 2>&1)
+            echo "$output"
             # if trimmed package is zellij and output is "error: failed to compile"
             if [[ "$trimmed_package" == "zellij" && "$output" == *"error: failed to compile"* ]]; then
                 echo_with_color "$YELLOW_COLOR" "Failed to install ${trimmed_package}."
