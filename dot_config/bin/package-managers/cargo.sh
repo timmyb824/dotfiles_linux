@@ -11,11 +11,11 @@ install_cargo_packages() {
             output=$(cargo install "$trimmed_package")
             echo "$output"
             # if trimmed package is zellij and output is "error: failed to compile"
-            if [[ "$trimmed_package" == "zellij" && "$output" == *"error: failed to compile"* ]]; then
+            if [[ "$trimmed_package" == "zellij" && "$output" == *"error"* ]]; then
                 echo_with_color "$YELLOW_COLOR" "Failed to install ${trimmed_package}."
                 echo_with_color "$YELLOW_COLOR" "Trying to install zellij with pkgx"
                     if pkgx install zellij; then
-                        echo_with_color "$GREEN_COLOR" "zellij installed successfully."
+                        echo_with_color "$GREEN_COLOR" "zellij installed successfully with pkgx."
                     else
                         echo_with_color "$RED_COLOR" "Failed to install zellij with pkgx."
                         echo_with_color "$YELLOW_COLOR" "Continuing with the next package..."
