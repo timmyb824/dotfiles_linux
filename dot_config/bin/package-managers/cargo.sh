@@ -2,6 +2,8 @@
 
 source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
+
+# Function to install cargo packages
 install_cargo_packages() {
     echo_with_color "$CYAN_COLOR" "Installing cargo packages..."
 
@@ -10,16 +12,18 @@ install_cargo_packages() {
         if [ -n "$trimmed_package" ]; then  # Ensure the line is not empty
             output=$(cargo install "$trimmed_package")
             echo "$output"
-            # if trimmed package is zellij and output is "error: failed to compile"
-            if [[ "$trimmed_package" == "zellij" && "$output" == *"error"* ]]; then
-                echo_with_color "$YELLOW_COLOR" "Failed to install ${trimmed_package}."
-                echo_with_color "$YELLOW_COLOR" "Trying to install zellij with pkgx"
-                    if pkgx install zellij; then
-                        echo_with_color "$GREEN_COLOR" "zellij installed successfully with pkgx."
-                    else
+            if [[ "$trimmed_package" == "zellij" ]]; then
+                if ! command_exists zellij; then
+                    echo_with_color "$RED_COLOR" "Failed to install zellij with cargo, trying pkgx..."
+                    if ! pkgx install zellij; then
                         echo_with_color "$RED_COLOR" "Failed to install zellij with pkgx."
-                        echo_with_color "$YELLOW_COLOR" "Continuing with the next package..."
+                    else
+                        echo_with_color "$GREEN_COLOR" "zellij installed successfully with pkgx."
                     fi
+                else
+                    echo_with_color "$GREEN_COLOR" "zellij installed successfully with cargo."
+                fi
+                echo_with_color "$YELLOW_COLOR" "Continuing with the next package..."
             elif [[ "$output" == *"error"* ]]; then
                 echo_with_color "$RED_COLOR" "Failed to install ${trimmed_package}."
                 echo_with_color "$YELLOW_COLOR" "Continuing with the next package..."
@@ -30,6 +34,7 @@ install_cargo_packages() {
     done < <(get_package_list cargo_linux.list)
 }
 
+# Function to initialize cargo
 initialize_cargo() {
     if command_exists cargo; then
         echo_with_color "$GREEN_COLOR" "cargo is already installed."
@@ -41,13 +46,9 @@ initialize_cargo() {
             echo_with_color "$RED_COLOR" "Cargo environment file does not exist."
             exit_with_error "Please install cargo to continue." 1
         fi
-
-        if ! command_exists cargo; then
-            echo_with_color "$RED_COLOR" "Cargo is still not found after attempting to fix the PATH."
-            exit_with_error "Please install cargo to continue." 1
-        fi
     fi
 }
 
+# Main execution
 initialize_cargo
 install_cargo_packages
