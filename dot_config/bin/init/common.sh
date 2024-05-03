@@ -53,10 +53,26 @@ is_privileged_user() {
     return 1 # The user is not privileged
 }
 
-# Function to get a list of packages from a Gist
+# TODO: remove if no issues with new one below it
+# # Function to get a list of packages from a Gist
+# get_package_list() {
+#     local package_list_name="$1"
+#     local gist_url="https://gist.githubusercontent.com/timmyb824/807597f33b14eceeb26e4e6f81d45962/raw/${package_list_name}"
+
+#     # Fetch the package list, remove comments, and trim whitespace
+#     curl -fsSL "$gist_url" | sed 's/#.*//' | awk '{$1=$1};1'
+# }
+
 get_package_list() {
     local package_list_name="$1"
-    local gist_url="https://gist.githubusercontent.com/timmyb824/807597f33b14eceeb26e4e6f81d45962/raw/${package_list_name}"
+    local gist_url=""
+
+    # Check if the file is Brewfile or ends with .list
+    if [[ "$package_list_name" == "Brewfile" ]] || [[ "$package_list_name" == *".list" ]]; then
+        gist_url="https://gist.githubusercontent.com/timmyb824/807597f33b14eceeb26e4e6f81d45962/raw/${package_list_name}"
+    else
+        gist_url="https://gist.githubusercontent.com/timmyb824/807597f33b14eceeb26e4e6f81d45962/raw/${package_list_name}.list"
+    fi
 
     # Fetch the package list, remove comments, and trim whitespace
     curl -fsSL "$gist_url" | sed 's/#.*//' | awk '{$1=$1};1'
