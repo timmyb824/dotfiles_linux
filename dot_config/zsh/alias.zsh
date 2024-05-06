@@ -20,6 +20,7 @@ alias ldot="lsd -ld .*"
 alias lg="lazygit"
 alias ls="lsd"
 alias ll="lsd -lh"
+alias lt="lsd --tree"
 # alias nano="/opt/homebrew/bin/nano"
 alias oc="opencommit"
 alias po=podman
