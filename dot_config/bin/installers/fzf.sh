@@ -19,7 +19,6 @@ install_fzf() {
         echo_with_color "$GREEN_COLOR" "fzf cloned successfully; running installer"
         if ~/.fzf/install; then
             echo_with_color "$GREEN_COLOR" "fzf installed successfully"
-            echo_with_color "$GREEN_COLOR" "Removing fzf directory"
         else
             exit_with_error "Failed to install fzf"
         fi
