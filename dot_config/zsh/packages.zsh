@@ -1,16 +1,21 @@
+# --- pyenv ---
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
 if command -v pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
 fi
 
-eval "$(zoxide init --cmd cd zsh)" # pkgx
-eval "$(direnv hook zsh)" # pkgx
-eval "$(fnm env --use-on-cd)" # pkgx
+
+# --- other ---
+eval "$(zoxide init --cmd cd zsh)"
+eval "$(direnv hook zsh)"
+eval "$(fnm env --use-on-cd)"
 eval "$(basher init - zsh)"
-eval "$(kickstart infect)" # basher
+eval "$(kickstart infect)"
 eval "$(rbenv init - zsh)"
 
-source "$HOME/.config/broot/launcher/bash/br" # pkgx
+source "$HOME/.config/broot/launcher/bash/br"
 
 
