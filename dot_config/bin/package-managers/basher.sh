@@ -9,7 +9,7 @@ fi
 
 # Check if basher is not already installed
 if [ ! -d "$HOME/.basher" ]; then
-    echo "basher is not installed. Installing now..."
+    echo_with_color "$BLUE_COLOR" "basher is not installed. Installing now..."
     if git clone --depth=1 https://github.com/basherpm/basher.git ~/.basher; then
         echo_with_color "$GREEN_COLOR" "basher installed successfully"
     else
