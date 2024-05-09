@@ -67,6 +67,7 @@ eval "$(fnm env --use-on-cd)"
 eval "$(basher init - zsh)"
 eval "$(kickstart infect)"
 eval "$(rbenv init - zsh)"
+eval "$(op signin)"
 
 source "$HOME/.config/broot/launcher/bash/br"
 
