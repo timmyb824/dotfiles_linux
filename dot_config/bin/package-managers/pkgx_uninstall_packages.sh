@@ -6,20 +6,14 @@ source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 prompt_for_package_list() {
     echo_with_color "$CYAN_COLOR" "Please select the package list you want to uninstall:"
     echo "1) pkgx_code_server.list"
-    echo "2) pkgx_work.list"
-    echo "3) pkgx_personal.list"
-    echo "4) pkgx_linux.list"
-    echo "5) pkgx_linux_init.list"
-    echo "6) pkgx_linux_all.list"
-    read -p "Enter the number (1-6): " choice
+    echo "2) pkgx_linux.list"
+    echo "3) pkgx_all.list"
+    read -p "Enter the number (1-3): " choice
 
     case $choice in
     1) package_list="pkgx_code_server.list" ;;
-    2) package_list="pkgx_work.list" ;;
-    3) package_list="pkgx_personal.list" ;;
-    4) package_list="pkgx_linux.list" ;;
-    5) package_list="pkgx_linux_init.list" ;;
-    6) package_list="pkgx_linux_all.list" ;;
+    2) package_list="pkgx_linux.list" ;;
+    3) package_list="pkgx_all.list" ;;
     *)
         echo_with_color "$RED_COLOR" "Invalid selection. Exiting."
         exit 1
