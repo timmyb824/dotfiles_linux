@@ -1,6 +1,7 @@
 # global
 .DS_Store
 setup.sh
+lazy-lock.json
 
 # nvim
 /Users/timothybryant/.config/nvim/LICENSE,md
