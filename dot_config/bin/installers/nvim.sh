@@ -27,6 +27,8 @@ if [ -f /usr/bin/nvim ]; then
         echo_with_color "$RED_COLOR" "Error: Failed to remove the existing Neovim installation."
         exit 1
     fi
+else
+    echo_with_color "$YELLOW_COLOR" "No existing Neovim installation found."
 fi
 }
 
