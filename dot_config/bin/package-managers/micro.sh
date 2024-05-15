@@ -35,6 +35,9 @@ install_micro_plugin() {
     fi
 }
 
+if ! command_exists micro; then
+    echo_with_color "$RED_COLOR" "micro is not installed, skipping plugin installation"
+fi
 
 # Read package list and install plugins
 while IFS= read -r package; do
