@@ -28,6 +28,7 @@ install_fzf() {
 
 clone_fzf_git() {
     if command_exists ghq; then
+        echo_with_color "$YELLOW_COLOR" "Cloning fzf-git.sh"
         ghq get https://github.com/junegunn/fzf-git.sh || exit_with_error "Failed to clone fzf-git.sh"
     else
         exit_with_error "ghq is not installed - please install ghq and run this script again"
@@ -37,6 +38,7 @@ clone_fzf_git() {
 install_fdfind() {
     if ! command_exists fd; then
         if command_exists cargo; then
+            echo_with_color "$YELLOW_COLOR" "Installing fd-find"
             cargo install fd-find || exit_with_error "Failed to install fd-find"
         else
             exit_with_error "cargo is not installed - please install cargo and run this script again"
