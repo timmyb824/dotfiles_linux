@@ -5,7 +5,6 @@
 add_newline = true
 command_timeout = 3000
 
-
 # Replace the "❯" symbol in the prompt with "➜"
 [character] # The name of the module we are configuring is "character"
 success_symbol = " " # The "success_symbol" segment is being set to "➜" with the color "bold green i.e. [➜](bold green)"
@@ -45,6 +44,9 @@ format = "[$path]($style)[$lock_symbol]($lock_style) "
 truncation_symbol = "…/"
 home_symbol = " 🏠"
 disabled =  false
+
+[direnv]
+disabled = true
 
 [docker_context]
 format = 'via [🐳 $context](blue bold)'
@@ -101,7 +103,7 @@ format = '[$symbol$context( \($namespace\) )]($style)'
 symbol = "⛵ "
 detect_folders = ["!~/"]
 detect_files = ["config_k3s"]
-disabled = false
+disabled = true
 # [kubernetes.context_aliases]
 # "arn:aws:eks:us-east-1:0123456789:cluster/qa-us-east-1-cse-app" = "QA"
 
