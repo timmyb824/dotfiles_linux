@@ -7,6 +7,21 @@ initialize_fnm_for_session() {
     eval "$(fnm env --use-on-cd)"
 }
 
+# Function to initialize cargo
+initialize_cargo() {
+    if command_exists cargo; then
+        echo_with_color "$GREEN_COLOR" "cargo is already installed."
+    else
+        echo_with_color "$YELLOW_COLOR" "Initializing cargo..."
+        if [ -f "$HOME/.cargo/env" ]; then
+            source "$HOME/.cargo/env"
+        else
+            echo_with_color "$RED_COLOR" "Cargo environment file does not exist."
+            exit_with_error "Please install cargo to continue." 1
+        fi
+    fi
+}
+
 # Function to confirm Node version and npm availability
 confirm_node_and_npm() {
     local version
@@ -46,7 +61,7 @@ install_npm_packages() {
 if ! command_exists npm; then
     echo_with_color "$RED_COLOR" "npm could not be found"
 
-    attempt_fix_command fnm "$HOME/.local/bin"
+    initialize_cargo
 
     if ! command_exists fnm; then
         exit_with_error "fnm is still not found after attempting to fix the PATH. Please install Node.js to continue."
