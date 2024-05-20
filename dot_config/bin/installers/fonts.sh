@@ -14,6 +14,7 @@ install_fonts_linux() {
     echo_with_color "32" "Fonts installed."
 }
 
+
 # Check if the script is running on Linux
 if [ "$(get_os)" == "Linux" ]; then
     # Check if 'ghq' is installed and use it to get nerd-fonts

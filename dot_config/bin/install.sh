@@ -55,6 +55,8 @@ declare -a scripts_to_run=(
     "configuration/go_directories.sh"
     "package-managers/go.sh"
     "configuration/mount_nas.sh"
+    "installers/fzf.sh"
+    "package-managers/gh_cli.sh"
 )
 
 # Iterate through the scripts and run them
