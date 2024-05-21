@@ -19,6 +19,7 @@ install_the_font() {
     fi
 
     echo "Installing font $font_name"
+    mkdir -p "$font_path" || exit_with_error "Failed to create font directory"
     curl -L -o "$font_path" "$font_url" || exit_with_error "Failed to download font $font_name"
     unzip -o "$font_path" -d "$font_path" || exit_with_error "Failed to unzip font $font_name"
     fc-cache -f -v "$font_path" || exit_with_error "Failed to update font cache"
