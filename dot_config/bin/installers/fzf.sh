@@ -27,11 +27,17 @@ install_fzf() {
 }
 
 clone_fzf_git() {
+    if ! command_exists ghq; then
+        echo_with_color "$YELLOW_COLOR" "ghq is not installed - attempting to fix"
+        add_to_path "$HOME/go/bin"
+    fi
+
     if command_exists ghq; then
+        echo_with_color "$GREEN_COLOR" "ghq is installed"
         echo_with_color "$YELLOW_COLOR" "Cloning fzf-git.sh"
         ghq get https://github.com/junegunn/fzf-git.sh || exit_with_error "Failed to clone fzf-git.sh"
     else
-        exit_with_error "ghq is not installed - please install ghq and run this script again"
+        exit_with_error "ghq still not installed - please install it and run script again"
     fi
 }
 
@@ -48,6 +54,20 @@ install_fdfind() {
     fi
 }
 
+initialize_cargo() {
+    if command_exists cargo; then
+        echo_with_color "$GREEN_COLOR" "cargo is already installed."
+    else
+        echo_with_color "$YELLOW_COLOR" "Initializing cargo..."
+        if [ -f "$HOME/.cargo/env" ]; then
+            source "$HOME/.cargo/env"
+        else
+            echo_with_color "$RED_COLOR" "Cargo environment file does not exist."
+            exit_with_error "Please install cargo to continue." 1
+        fi
+    fi
+}
+
 # Check if git is installed
 if ! command_exists git; then
     exit_with_error "git is not installed - please install git and run this script again"
@@ -56,4 +76,5 @@ fi
 uninstall_fzf_apt
 install_fzf
 clone_fzf_git
+initialize_cargo
 install_fdfind
