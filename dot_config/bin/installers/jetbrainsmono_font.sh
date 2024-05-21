@@ -33,6 +33,11 @@ install_the_font() {
     unzip -o "$font_zip" -d "$font_dir" || exit_with_error "Failed to unzip font $font_name"
 
     # Update the font cache
+    if ! command_exists "fc-cache"; then
+        echo_with_color "$YELLOW_COLOR" "fc-cache is required to update the font cache; installing now.."
+        sudo apt-get install fontconfig -y || exit_with_error "Failed to install fontconfig"
+    fi
+
     fc-cache -f -v "$font_dir" || exit_with_error "Failed to update font cache"
 
     echo_with_color "$GREEN_COLOR" "Font $font_name has been installed"
