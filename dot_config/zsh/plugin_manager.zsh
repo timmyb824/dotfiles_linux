@@ -52,7 +52,6 @@ function plugin-load {
 
 # List of github repo plugins
 plugins=(
-  timmyb824/zsh-pins # my own fork of mehalter/zsh-pins
   mdumitru/git-aliases
   agpenton/1password-zsh-plugin
   sparsick/ansible-zsh
@@ -63,6 +62,7 @@ plugins=(
   amstrad/oh-my-matrix
   MichaelAquilina/zsh-you-should-use
   supercrabtree/k
+  # timmyb824/zsh-pins # my own fork of mehalter/zsh-pins
   # zsh-users/zsh-syntax-highlighting
 
   # speed things up by loading intensive plugins after zsh-defer

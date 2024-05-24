@@ -16,7 +16,7 @@ source "$HOME/.config/zsh/functions.zsh"
 source "$HOME/.config/zsh/env.zsh"
 
 # Setup completions
-source "$HOME/.config/zsh/completions.zsh"
+# source "$HOME/.config/zsh/completions.zsh"
 
 # Load plugins and package managers
 source "$HOME/.config/zsh/packages.zsh"
