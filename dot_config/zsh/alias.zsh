@@ -43,3 +43,4 @@ alias tf=terraform
 alias wtf=wtfutil
 alias zbench="for i in {1..10}; do /usr/bin/time zsh -lic exit; done"
 alias zshconfig="micro ~/.zshrc"
+alias zj="zellij"
