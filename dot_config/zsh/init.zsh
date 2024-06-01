@@ -15,5 +15,6 @@ if [[ $TERM_PROGRAM != "WarpTerminal" ]]; then
     export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
     eval "$(atuin init zsh)"
     test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+    test -e "$HOME/.shellfishrc" && source "$HOME/.shellfishrc"
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=white,bold,bg=c0c0c0,bold"
 fi
