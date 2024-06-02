@@ -42,6 +42,7 @@ declare -a scripts_to_run=(
     "installers/tfenv_terraform.sh"
     "installers/tailscale.sh"
     "installers/rbenv_ruby.sh"
+    "package-managers/gem.sh"
     "installers/rust.sh"
     "package-managers/cargo.sh"
     "installers/fnm_node.sh"
