@@ -47,16 +47,22 @@ declare -a scripts_to_run=(
     "installers/fnm_node.sh"
     "package-managers/npm.sh"
     "installers/docker.sh"
-    "installers/zsh_shell.sh"
     "installers/atuin.sh"
     "installers/ngrok.sh"
+    "installers/docker.sh"
     "installers/podman.sh"
     "installers/promtail.sh"
     "configuration/go_directories.sh"
     "package-managers/go.sh"
     "configuration/mount_nas.sh"
+    "installers/nvim.sh"
     "installers/fzf.sh"
     "package-managers/gh_cli.sh"
+    "package-managers/ghq.sh"
+    "package-managers/gitopolis.sh"
+    "installers/fonts.sh"
+    "installers/jetbrainsmono_font.sh"
+    "installers/zsh_shell.sh"
 )
 
 # Iterate through the scripts and run them
