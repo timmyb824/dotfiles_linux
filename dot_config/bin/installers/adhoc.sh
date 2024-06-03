@@ -65,7 +65,7 @@ install_supafile() {
         echo_with_color "$YELLOW_COLOR" "supafile is not installed."
         ask_yes_or_no "Do you want to install supafile?"
         if [[ "$?" -eq 0 ]]; then
-            if ! bash -c "$(curl -sLo- https://raw.githubusercontent.com/yorukot/superfile/main/install.sh)"; then
+            if ! bash -c "$(wget -qO- https://superfile.netlify.app/install.sh)"; then
                 echo_with_color "$RED_COLOR" "Failed to install supafile."
             else
                 echo_with_color "$GREEN_COLOR" "supafile installed successfully."
