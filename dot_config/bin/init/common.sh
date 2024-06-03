@@ -153,7 +153,7 @@ ask_yes_or_no() {
             return 1
             ;;
         *)
-            echo_with_color "32" "Please answer yes or no."
+            echo_with_color "$GREEN_COLOR" "Please answer yes or no."
             ;;
         esac
     done
