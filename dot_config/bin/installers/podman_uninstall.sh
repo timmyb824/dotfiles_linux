@@ -60,11 +60,21 @@ uninstall_podman() {
     local config_dir="$HOME/.config/containers"
     if [[ -d "$config_dir" ]]; then
         if ! rm -rf "$config_dir"; then
-            echo_with_color "31" "Failed to remove Podman configuration directory."
+            echo_with_color "31" "Failed to remove Podnfiguration directory."
             return 1
         fi
         echo_with_color "32" "Podman configuration directory removed successfully."
     fi
+
+    # remove systemd user unit files (if uninstalling/reinstalling leaving these may help restart the containers)
+#    local systemd_dir="$HOME/.config/systemd"
+#    if [[ -d "$systemd_dir" ]]; then
+#      if ! rm -rf "$systemd_dir"; then
+#          echo_with_color "31" "Failed to remove systemd user unit files."
+#          return 1
+#      fi
+#      echo_with_color "32" "Systemd user unit files removed successfully."
+#    fi
 
     # Disable lingering for the user
     if ! sudo loginctl disable-linger "$USER"; then
