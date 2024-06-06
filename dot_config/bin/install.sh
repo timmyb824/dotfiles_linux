@@ -64,6 +64,7 @@ declare -a scripts_to_run=(
     "installers/fonts.sh"
     "installers/jetbrainsmono_font.sh"
     "installers/zsh_shell.sh"
+    "installers/misc.sh"
 )
 
 # Iterate through the scripts and run them
