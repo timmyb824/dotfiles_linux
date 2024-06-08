@@ -32,7 +32,7 @@ install_headscale_linux() {
 authenticate_tailscale() {
     read -sp "Please enter your Headscale pre-authorization key: " HEADSCALE_AUTH_KEY
     echo
-    if sudo tailscale up --accept-routes=true --login-servervhttps://headscale.local.timmybtech.com --auth-key "$HEADSCALE_AUTH_KEY" --operator="$USER"; then
+    if sudo tailscale up --accept-routes=true --login-server https://headscale.local.timmybtech.com --auth-key "$HEADSCALE_AUTH_KEY" --operator="$USER"; then
         echo_with_color "$GREEN_COLOR" "Tailscale has started successfully."
     else
         exit_with_error "Failed to start Tailscale with the provided authorization key."
@@ -45,7 +45,7 @@ if command_exists tailscale; then
     if [[ "$status" == *"Tailscale is stopped."* ]]; then
         echo_with_color "$BLUE_COLOR" "Tailscale is installed but stopped. Starting Tailscale..."
         authenticate_tailscale
-    elif [[ "$status" == *"logged out"* ]]; then
+    elif [[ "$status" == *"Logged out"* ]]; then
         echo_with_color "$BLUE_COLOR" "Tailscale is installed but not logged in. Authenticating..."
         authenticate_tailscale
     else
