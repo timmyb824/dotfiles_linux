@@ -65,3 +65,4 @@ fi
 perform_dry_run
 
 echo "Script completed successfully."
+echo "Please run 'podman login docker.io' to authenticate with Docker Hub if you haven't already."
