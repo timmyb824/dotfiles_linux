@@ -15,12 +15,12 @@ alias g=git
 alias kk=kubectl
 alias kns='kubectl ns'
 alias kcx='kubectl ctx'
-alias la="lsd -lAh"
-alias ldot="lsd -ld .*"
 alias lg="lazygit"
-alias ls="lsd"
-alias ll="lsd -lh"
-alias lt="lsd --tree"
+alias ldot="eza --icons=always -ld .*"
+alias la="eza --icons=always -lAh"
+alias ls="eza --icons=always"
+alias ll="eza --icons=always -lh"
+alias lst="eza --icons=always --tree"
 alias oc="opencommit"
 alias po=podman
 alias poc='podman-compose'

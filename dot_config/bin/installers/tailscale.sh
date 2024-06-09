@@ -9,14 +9,16 @@ install_tailscale_linux() {
     if command_exists curl && command_exists lsb_release && command_exists sudo; then
         echo_with_color "$GREEN_COLOR" "Installing Tailscale..."
         local RELEASE
+        local DISTRO
         RELEASE=$(lsb_release -cs)
+        DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
         if [ -z "$RELEASE" ]; then
             exit_with_error "Could not determine the distribution codename with lsb_release."
         fi
 
         # Add the Tailscale repository signing key and repository
-        curl -fsSL "https://pkgs.tailscale.com/stable/ubuntu/${RELEASE}.noarmor.gpg" | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
-        curl -fsSL "https://pkgs.tailscale.com/stable/ubuntu/${RELEASE}.tailscale-keyring.list" | sudo tee /etc/apt/sources.list.d/tailscale.list
+        curl -fsSL "https://pkgs.tailscale.com/stable/${DISTRO}/${RELEASE}.noarmor.gpg" | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+        curl -fsSL "https://pkgs.tailscale.com/stable/${DISTRO}/${RELEASE}.tailscale-keyring.list" | sudo tee /etc/apt/sources.list.d/tailscale.list
 
         # Update the package list and install Tailscale
         sudo apt-get update || exit_with_error "Failed to update package list. Exiting."

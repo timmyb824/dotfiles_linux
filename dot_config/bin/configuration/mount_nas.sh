@@ -7,14 +7,13 @@ NAS_IP="192.168.86.44"
 NAS_SHARE="/volume1/homelab"
 EXPECTED_USER="$USER"
 
-
-echo_with_color "$BLUE_COLOR" "UPDATE SHARED FOLDER RULE WITH IP OF THE VM IN THE SYNOLOGY NAS OR THIS WILL FAIL."
-
 # Check if we can cd into the directory or if it is not empty
 if [ -d "$MOUNT_POINT" ] && cd "$MOUNT_POINT" && [ "$(ls -A "$MOUNT_POINT")" ]; then
     echo_with_color "$BLUE_COLOR" "$MOUNT_POINT is already mounted and accessible."
     exit 0
 fi
+
+echo_with_color "$BLUE_COLOR" "UPDATE SHARED FOLDER RULE WITH IP OF THE VM IN THE SYNOLOGY NAS OR THIS WILL FAIL."
 
 echo_with_color "$BLUE_COLOR" "Installing nfs-common if not already installed..."
 if ! command -v nfs-common >/dev/null 2>&1; then
