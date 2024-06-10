@@ -41,6 +41,8 @@ export PROMTAIL_VERSION="2.9.5"
 
 export ATUIN_USER="tbryant"
 
+export LOKI_URL="https://loki.local.timmybtech.com/loki/api/v1/push"
+
 ############# Global functions #############
 
 # Function to check if the current user is privileged
