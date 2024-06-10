@@ -49,7 +49,7 @@ install_pip_packages() {
         else
             exit_with_error "Failed to install ${package}."
         fi
-    done < <(get_package_list pip.list)
+    done < <(get_package_list pip_linux.list)
 }
 
 initialize_pip_linux
