@@ -255,7 +255,7 @@ EOL
 
 create_systemd_service_file() {
     echo_with_color "$GREEN_COLOR" "Creating Glances systemd service file..."
-    cat >/etc/systemd/system/glances.service <<EOL
+    sudo tee /etc/systemd/system/glances.service > /dev/null <<EOL
 [Unit]
 Description=Glances Monitoring Service
 After=network.target influxd.service
