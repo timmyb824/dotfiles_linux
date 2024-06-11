@@ -280,7 +280,7 @@ start_glances_service() {
     echo_with_color "$GREEN_COLOR" "Starting glances service..."
     sudo systemctl daemon-reload || exit_with_error "Failed to reload systemd daemon."
     sudo systemctl enable --now glances || exit_with_error "Failed to enable and start glances service."
-    sudo systemctl status glances || exit_with_error "Failed to check glances service status."
+    sudo systemctl status --no-pager glances || exit_with_error "Failed to check glances service status."
     echo_with_color "$GREEN_COLOR" "Glances service started successfully."
 }
 
