@@ -23,6 +23,7 @@ get_repositories() {
 }
 
 attempt_fix_command "go" "$HOME/.local/bin"
+attempt_fix_command "ghq" "$HOME/go/bin"
 
 if ! command_exists ghq; then
     exit_with_error "ghq is not available. Please install it first with homebrew."
