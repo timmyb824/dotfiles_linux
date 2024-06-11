@@ -111,6 +111,22 @@
 # Load initialization script
 source "$(dirname "${BASH_SOURCE[0]}")/../init/init.sh"
 
+# Check login status and log in if necessary
+gh_login_status() {
+    if ! gh auth status | grep -q "Logged in"; then
+        echo_with_color "$YELLOW_COLOR" "You are not logged in. Attempting to authenticate with GitHub CLI..."
+        read -r -p "Enter your GitHub CLI token: " gh_token
+        echo "$gh_token" > /tmp/gh_token.txt
+        if ! gh auth login --with-token < /tmp/gh_token.txt; then
+            exit_with_error "Failed to authenticate with GitHub CLI."
+        fi
+        rm /tmp/gh_token.txt
+        echo_with_color "$GREEN_COLOR" "You have successfully logged in."
+    else
+        echo_with_color "$GREEN_COLOR" "You are already logged in."
+    fi
+}
+
 # Function to install or update a GitHub CLI extension
 install_gh_extension() {
     local extension="$1"
@@ -141,6 +157,9 @@ if ! command_exists gh; then
 else
     echo_with_color "$GREEN_COLOR" "gh CLI found. Continuing with extensions installation..."
 fi
+
+# Check login status and log in if necessary
+gh_login_status
 
 # Read package list and install extensions
 while IFS= read -r package; do
