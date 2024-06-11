@@ -275,11 +275,16 @@ EOL
 }
 
 start_glances_service() {
-    echo "Starting glances service..."
+    echo_with_color "$GREEN_COLOR" "Starting glances service..."
     if ! sudo systemctl enable glances.service && sudo systemctl start glances.service; then
         exit_with_error "Failed to start glances service."
     fi
-    sudo systemctl status glances.service || exit_with_error "Failed to start glances service."
+    if ! sudo systemctl status glances.service; then
+        echo_with_color "$YELLOW_COLOR" "Failed to check glances service status. Attempting to restart the service..."
+        if ! sudo systemctl restart glances.service; then
+            exit_with_error "Failed to restart glances service."
+        fi
+    fi
 }
 
 main() {
