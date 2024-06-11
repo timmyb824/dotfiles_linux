@@ -281,11 +281,11 @@ start_glances_service() {
     if ! sudo systemctl enable glances.service && sudo systemctl start glances.service; then
         exit_with_error "Failed to start glances service."
     fi
+    # wait for service to come up and then check status
+    echo_with_color "$GREEN_COLOR" "Waiting for glances service to start..."
+    sleep 5
     if ! sudo systemctl status glances.service; then
-        echo_with_color "$YELLOW_COLOR" "Failed to check glances service status. Attempting to restart the service..."
-        if ! sudo systemctl restart glances.service; then
-            exit_with_error "Failed to restart glances service."
-        fi
+        exit_with_error "Failed to start glances service."
     fi
 }
 
