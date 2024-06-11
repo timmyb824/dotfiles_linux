@@ -286,6 +286,7 @@ start_glances_service() {
 
 main() {
     echo_with_color "$YELLOW_COLOR" "PLEASE HAVE YOUR INFLUXDB TOKEN AND PODMAN UNIX SOCKET READY (if applicable)."
+    sleep 2
     create_directories
     create_virtualenv
     install_dependencies
