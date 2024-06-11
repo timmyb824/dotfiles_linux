@@ -276,15 +276,13 @@ EOL
 
 start_glances_service() {
     echo "Starting glances service..."
-    if ! systemctl enable glances.service && systemctl start glances.service; then
+    if ! sudo systemctl enable glances.service && sudo systemctl start glances.service; then
         exit_with_error "Failed to start glances service."
     fi
-    echo "Glances installed and started successfully!"
+    sudo systemctl status glances.service || exit_with_error "Failed to start glances service."
 }
 
 main() {
-    echo_with_color "$YELLOW_COLOR" "PLEASE HAVE YOUR INFLUXDB TOKEN AND PODMAN UNIX SOCKET READY (if applicable)."
-    sleep 2
     create_directories
     create_virtualenv
     install_dependencies
