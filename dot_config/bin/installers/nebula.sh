@@ -4,7 +4,7 @@ source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
 # Function to download and extract Nebula binaries
 download_and_extract_nebula() {
-  echo "Downloading Nebula..."
+  printf "Downloading Nebula...\n"
   curl -LO https://github.com/slackhq/nebula/releases/download/v1.9.3/nebula-linux-amd64.tar.gz
   tar -xzf nebula-linux-amd64.tar.gz
   sudo mv nebula /usr/local/bin/
@@ -13,15 +13,15 @@ download_and_extract_nebula() {
 
 # Function to set up the Lighthouse
 setup_lighthouse() {
-  echo "Setting up Lighthouse..."
+  printf "Setting up Lighthouse...\n"
   
   # Variables
-  read -r -p "Enter the name for the Lighthouse (e.g., lighthouse1): " LH_NAME
-  read -r -p "Enter the IP address for the Lighthouse (e.g., 192.168.100.1/24): " LH_IP
-  read -r -p "Enter the routable IP address for the Lighthouse: " LH_ROUTABLE_IP
+  read -r -p "Enter the name for the Lighthouse (e.g., lighthouse1): " lh_name
+  read -r -p "Enter the IP address for the Lighthouse (e.g., 192.168.100.1/24): " lh_ip
+  read -r -p "Enter the routable IP address for the Lighthouse: " lh_routable_ip
   
   # Create lighthouse certificate
-  nebula-cert sign -name "$LH_NAME" -ip "$LH_IP"
+  nebula-cert sign -name "$lh_name" -ip "$lh_ip"
   
   # Create config directory
   mkdir -p /etc/nebula
@@ -29,12 +29,12 @@ setup_lighthouse() {
   # Download and configure example config
   curl -o /etc/nebula/config-lighthouse.yaml https://raw.githubusercontent.com/slackhq/nebula/master/examples/config.yml
   sed -i 's/# am_lighthouse: false/am_lighthouse: true/' /etc/nebula/config-lighthouse.yaml
-  sed -i "s/#static_host_map:/static_host_map:\n  '$LH_IP': ['$LH_ROUTABLE_IP:4242']/" /etc/nebula/config-lighthouse.yaml
+  sed -i "s/#static_host_map:/static_host_map:\n  '$lh_ip': ['$lh_routable_ip:4242']/" /etc/nebula/config-lighthouse.yaml
   
   # Move certificates to config directory
   mv ca.crt /etc/nebula/
-  mv "$LH_NAME".crt /etc/nebula/host.crt
-  mv "$LH_NAME".key /etc/nebula/host.key
+  mv "$lh_name".crt /etc/nebula/host.crt
+  mv "$lh_name".key /etc/nebula/host.key
   mv /etc/nebula/config-lighthouse.yaml /etc/nebula/config.yaml
   
   # Start Nebula
@@ -43,57 +43,64 @@ setup_lighthouse() {
 
 # Function to set up a regular host
 setup_host() {
-  echo "Setting up Host..."
+  printf "Setting up Host...\n"
   
   # Variables
-  read -p "Enter the name for the Host (e.g., server): " HOST_NAME
-  read -p "Enter the IP address for the Host (e.g., 192.168.100.9/24): " HOST_IP
-  read -p "Enter the routable IP address for the Lighthouse: " LH_ROUTABLE_IP
+  read -p "Enter the name for the Host (e.g., server): " host_name
+  read -p "Enter the IP address for the Host (e.g., 192.168.100.9/24): " host_ip
+  read -p "Enter the routable IP address for the Lighthouse: " lh_routable_ip
   
   # Create host certificate
-  nebula-cert sign -name "$HOST_NAME" -ip "$HOST_IP"
+  nebula-cert sign -name "$host_name" -ip "$host_ip"
   
   # Create config directory
   mkdir -p /etc/nebula
   
   # Download and configure example config
   curl -o /etc/nebula/config.yaml https://raw.githubusercontent.com/slackhq/nebula/master/examples/config.yml
-  sed -i "s/#static_host_map:/static_host_map:\n  '192.168.100.1': ['$LH_ROUTABLE_IP:4242']/" /etc/nebula/config.yaml
+  sed -i "s/#static_host_map:/static_host_map:\n  '192.168.100.1': ['$lh_routable_ip:4242']/" /etc/nebula/config.yaml
   sed -i 's/# am_lighthouse: false/am_lighthouse: false/' /etc/nebula/config.yaml
   sed -i "s/# hosts:/hosts:\n    - '192.168.100.1'/" /etc/nebula/config.yaml
   
   # Move certificates to config directory
   mv ca.crt /etc/nebula/
-  mv "$HOST_NAME".crt /etc/nebula/host.crt
-  mv "$HOST_NAME".key /etc/nebula/host.key
+  mv "$host_name".crt /etc/nebula/host.crt
+  mv "$host_name".key /etc/nebula/host.key
   
   # Start Nebula
   /usr/local/bin/nebula -config /etc/nebula/config.yaml
 }
 
 # Main script logic
-echo "Nebula Overlay Network Setup Script"
-echo "==================================="
-echo "1. Setup Lighthouse"
-echo "2. Setup Host"
-read -p "Choose an option (1 or 2): " OPTION
+main() {
+  printf "Nebula Overlay Network Setup Script\n"
+  printf "===================================\n"
+  printf "1. Setup Lighthouse\n"
+  printf "2. Setup Host\n"
+  read -p "Choose an option (1 or 2): " option
 
-# Download and extract Nebula binaries
-download_and_extract_nebula
+  # Download and extract Nebula binaries
+  download_and_extract_nebula
 
-# Create CA certificate if it does not exist
-if [ ! -f ca.crt ]; then
-  echo "Creating Certificate Authority..."
-  nebula-cert ca -name "Myorganization, Inc"
-fi
+  # Create CA certificate if it does not exist
+  if [ ! -f ca.crt ]; then
+    printf "Creating Certificate Authority...\n"
+    nebula-cert ca -name "Myorganization, Inc"
+  fi
 
-# Run appropriate setup function
-case $OPTION in
-  1)
-    setup_lighthouse
-    ;;
-  2)
-    setup_host
-    ;;
-  *)
-    echo "Invalid option. Please run the script again and choose a valid option."
+  # Run appropriate setup function
+  case $option in
+    1)
+      setup_lighthouse
+      ;;
+    2)
+      setup_host
+      ;;
+    *)
+      printf "Invalid option. Please run the script again and choose a valid option.\n"
+      ;;
+  esac
+}
+
+main "$@"
+
