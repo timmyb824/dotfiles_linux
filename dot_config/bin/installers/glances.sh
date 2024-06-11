@@ -6,6 +6,14 @@ USER="$CURRENT_USER"
 WORKING_DIR="/home/${USER}/glances"
 PYENV_BIN="/home/${USER}/.pyenv/bin/pyenv"
 
+initialize_pyenv() {
+    # Initialize pyenv for the current session
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init --path)"
+    eval "$(pyenv init -)"
+}
+
 create_directories() {
     echo_with_color "$GREEN_COLOR" "Creating directories..."
     for dir in "/home/${USER}/.config" "/home/${USER}/.config/glances" "/home/${USER}/glances"; do
@@ -21,7 +29,11 @@ create_directories() {
 create_virtualenv() {
     echo_with_color "$GREEN_COLOR" "Creating glances virtualenv..."
     if ! command_exists pyenv; then
-        exit_with_error "pyenv command not found. Please install pyenv."
+        echo_with_color "$YELLOW_COLOR" "pyenv command not found. Attempting to initialize pyenv..."
+        initialize_pyenv || exit_with_error "Failed to initialize pyenv."
+        if ! command_exists pyenv; then
+            exit_with_error "pyenv command still not found. Please make sure it is installed."
+        fi
     fi
 
     if ! $PYENV_BIN virtualenv "${PYTHON_VERSION}" glances; then
