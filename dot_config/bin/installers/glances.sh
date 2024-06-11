@@ -57,8 +57,9 @@ install_dependencies() {
 }
 
 create_config_file() {
+    echo ""
     read -r -p "Enter your InfluxDB token: " INFLUXDB_TOKEN
-    read -r -p "Enter your Podman UNIX socket path (leave blank if not using Podman): " PODMAN_UNIX
+    read -r -p "Enter your Podman UNIX socket path e.g. unix:///run/user/1000/podman/podman.sock (leave blank if not using Podman): " PODMAN_UNIX
     echo_with_color "$GREEN_COLOR" "Creating glances config file..."
     cat >/home/"${USER}"/.config/glances/glances.conf <<EOL
 [global]
@@ -236,10 +237,11 @@ port_default_gateway=True
 disable=False
 max_name_size=20
 all=False
-podman_sock=${PODMAN_UNIX} # unix:///run/user/1000/podman/podman.sock
+podman_sock=${PODMAN_UNIX}
 
 [influxdb2]
 host=influxdb.local.timmybtech.com
+port: 443
 protocol=https
 org=homelab
 bucket=glances
@@ -255,14 +257,14 @@ EOL
 
 create_systemd_service_file() {
     echo_with_color "$GREEN_COLOR" "Creating Glances systemd service file..."
-    sudo tee /etc/systemd/system/glances.service > /dev/null <<EOL
+    sudo tee /etc/systemd/system/glances.service >/dev/null <<EOL
 [Unit]
 Description=Glances Monitoring Service
 After=network.target influxd.service
 
 [Service]
 WorkingDirectory=${WORKING_DIR}
-ExecStart=/home/${USER}/.pyenv/versions/glances/bin/glances --quiet --export influxdb2 --export prometheus
+ExecStart=/home/${USER}/.pyenv/versions/glances/bin/glances --quiet --export influxdb2,prometheus
 User=${USER}
 Restart=on-failure
 RemainAfterExit=yes
