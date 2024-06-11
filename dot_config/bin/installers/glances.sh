@@ -278,15 +278,9 @@ EOL
 
 start_glances_service() {
     echo_with_color "$GREEN_COLOR" "Starting glances service..."
-    if ! sudo systemctl enable glances.service && sudo systemctl start glances.service; then
-        exit_with_error "Failed to start glances service."
-    fi
-    # wait for service to come up and then check status
-    echo_with_color "$GREEN_COLOR" "Waiting for glances service to start..."
-    sleep 5
-    if ! sudo systemctl status glances.service; then
-        exit_with_error "Failed to start glances service."
-    fi
+    sudo systemctl daemon-reload || exit_with_error "Failed to reload systemd daemon."
+    sudo systemctl enable --now glances || exit_with_error "Failed to enable and start glances service."
+    sudo systemctl status glances || exit_with_error "Failed to check glances service status."
     echo_with_color "$GREEN_COLOR" "Glances service started successfully."
 }
 
