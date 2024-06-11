@@ -57,10 +57,8 @@ install_dependencies() {
 }
 
 create_config_file() {
-    local INFLUXDB_TOKEN
-    local PODMAN_UNIX
-    INFLUXDB_TOKEN=$(ask_for_input "Enter your InfluxDB token:")
-    PODMAN_UNIX=$(ask_for_input "Enter the path to your podman unix socket (leave blank if not using podman):")
+    read -r -p "Enter your InfluxDB token: " INFLUXDB_TOKEN
+    read -r -p "Enter your Podman UNIX socket path (leave blank if not using Podman): " PODMAN_UNIX
     echo_with_color "$GREEN_COLOR" "Creating glances config file..."
     cat >/home/"${USER}"/.config/glances/glances.conf <<EOL
 [global]
@@ -251,7 +249,7 @@ token=${INFLUXDB_TOKEN}
 host=localhost
 port=9091
 #prefix=glances
-labels=src:glances,hostname:`hostname`
+labels=src:glances,hostname:$(hostname)
 EOL
 }
 
