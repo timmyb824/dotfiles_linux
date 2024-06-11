@@ -104,6 +104,22 @@ get_os() {
     esac
 }
 
+get_os_distro() {
+    local RELEASE
+    local DISTRO
+    if command_exists lsb_release; then
+        RELEASE=$(lsb_release -cs)
+        DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
+    elif command_exists cat; then
+        RELEASE=$(cat /etc/os-release | grep -oP '(?<=VERSION_CODENAME=).+' | tr -d '"')
+        DISTRO=$(grep -oP '(?<=^ID=).+' /etc/os-release | tr -d '"')
+    fi
+    if [ -z "$RELEASE" ]; then
+        exit_with_error "Could not determine the distribution codename. Exiting."
+    fi
+    echo "$DISTRO"
+}
+
 # Function to output an error message and exit
 exit_with_error() {
     echo_with_color "31" "Error: $1" >&2

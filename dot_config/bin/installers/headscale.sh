@@ -10,10 +10,15 @@ install_headscale_linux() {
         echo_with_color "$GREEN_COLOR" "Installing Tailscale..."
         local RELEASE
         local DISTRO
-        RELEASE=$(lsb_release -cs)
-        DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
+        if command_exists lsb_release; then
+            RELEASE=$(lsb_release -cs)
+            DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
+        elif command_exists cat; then
+            RELEASE=$(cat /etc/os-release | grep -oP '(?<=VERSION_CODENAME=).+' | tr -d '"')
+            DISTRO=$(grep -oP '(?<=^ID=).+' /etc/os-release | tr -d '"')
+        fi
         if [ -z "$RELEASE" ]; then
-            exit_with_error "Could not determine the distribution codename with lsb_release."
+            exit_with_error "Could not determine the distribution codename. Exiting."
         fi
 
         # Add the Tailscale repository signing key and repository

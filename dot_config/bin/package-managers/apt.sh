@@ -19,6 +19,26 @@ install_apt_packages() {
     done < <(get_package_list apt.list)
 }
 
+
+install_os_specific_packages() {
+    local OS_NAME
+    OS_NAME=$(get_os_distro)
+    EXTRA_PACKAGES_DEBIAN="protobuf-compiler"
+    if [ -z "$OS_NAME" ]; then
+        exit_with_error "Could not determine the OS distribution. Exiting."
+    fi
+
+    if [ "$OS_NAME" = "debian" ]; then
+        echo_with_color "$CYAN_COLOR" "Installing OS-specific packages for Debian..."
+        sudo apt update || exit_with_error "Failed to update apt package list"
+        sudo apt install -y "$EXTRA_PACKAGES_DEBIAN" || exit_with_error "Failed to install OS-specific packages for Debian"
+
+    else
+        exit_with_error "OS distribution not supported. Exiting."
+    fi
+}
+
+
 # Ensure apt is installed
 if ! command_exists apt; then
     echo_with_color "$RED_COLOR" "apt could not be found"
