@@ -287,6 +287,7 @@ start_glances_service() {
     if ! sudo systemctl status glances.service; then
         exit_with_error "Failed to start glances service."
     fi
+    echo_with_color "$GREEN_COLOR" "Glances service started successfully."
 }
 
 main() {
