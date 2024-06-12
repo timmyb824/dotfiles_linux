@@ -38,7 +38,7 @@ setup_lighthouse() {
   sudo mv ca.crt /etc/nebula/
   sudo mv "$lh_name".crt /etc/nebula/host.crt
   sudo mv "$lh_name".key /etc/nebula/host.key
-  sudo mv /tmp/config-lighthouse.yaml /etc/nebula/config.yaml
+  sudo mv /tmp/config.yaml /etc/nebula/config.yaml
 
   if command_exists zellij; then
     printf "Starting Nebula with Zellij...\n"
