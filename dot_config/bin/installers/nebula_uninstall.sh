@@ -67,6 +67,7 @@ main() {
   remove_nebula_directory
   remove_nebula_user
   remove_nebula_binaries
+  remove_ca_key_and_cert
 
   echo_with_color "$GREEN_COLOR" "Nebula has been successfully removed."
 }
