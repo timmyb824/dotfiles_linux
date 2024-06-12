@@ -14,29 +14,29 @@ download_and_extract_nebula() {
 # Function to set up the Lighthouse
 setup_lighthouse() {
   printf "Setting up Lighthouse...\n"
-  
+
   # Variables
   read -r -p "Enter the name for the Lighthouse (e.g., lighthouse1): " lh_name
   read -r -p "Enter the IP address for the Lighthouse (e.g., 192.168.100.1/24): " lh_ip
   read -r -p "Enter the routable IP address for the Lighthouse: " lh_routable_ip
-  
+
   # Create lighthouse certificate
   nebula-cert sign -name "$lh_name" -ip "$lh_ip"
-  
+
   # Create config directory
   mkdir -p /etc/nebula
-  
+
   # Download and configure example config
   curl -o /etc/nebula/config-lighthouse.yaml https://raw.githubusercontent.com/slackhq/nebula/master/examples/config.yml
   sed -i 's/# am_lighthouse: false/am_lighthouse: true/' /etc/nebula/config-lighthouse.yaml
   sed -i "s/#static_host_map:/static_host_map:\n  '$lh_ip': ['$lh_routable_ip:4242']/" /etc/nebula/config-lighthouse.yaml
-  
+
   # Move certificates to config directory
   sudo mv ca.crt /etc/nebula/
   sudo mv "$lh_name".crt /etc/nebula/host.crt
   sudo mv "$lh_name".key /etc/nebula/host.key
   sudo mv /etc/nebula/config-lighthouse.yaml /etc/nebula/config.yaml
-  
+
   # Start Nebula
   /usr/local/bin/nebula -config /etc/nebula/config.yaml
 }
@@ -44,29 +44,29 @@ setup_lighthouse() {
 # Function to set up a regular host
 setup_host() {
   printf "Setting up Host...\n"
-  
+
   # Variables
   read -p "Enter the name for the Host (e.g., server): " host_name
   read -p "Enter the IP address for the Host (e.g., 192.168.100.9/24): " host_ip
   read -p "Enter the routable IP address for the Lighthouse: " lh_routable_ip
-  
+
   # Create host certificate
   nebula-cert sign -name "$host_name" -ip "$host_ip"
-  
+
   # Create config directory
   sudo mkdir -p /etc/nebula
-  
+
   # Download and configure example config
   curl -o /etc/nebula/config.yaml https://raw.githubusercontent.com/slackhq/nebula/master/examples/config.yml
   sed -i "s/#static_host_map:/static_host_map:\n  '192.168.100.1': ['$lh_routable_ip:4242']/" /etc/nebula/config.yaml
   sed -i 's/# am_lighthouse: false/am_lighthouse: false/' /etc/nebula/config.yaml
   sed -i "s/# hosts:/hosts:\n    - '192.168.100.1'/" /etc/nebula/config.yaml
-  
+
   # Move certificates to config directory
   sudo mv ca.crt /etc/nebula/
   sudo mv "$host_name".crt /etc/nebula/host.crt
   sudo mv "$host_name".key /etc/nebula/host.key
-  
+
   # Start Nebula
   /usr/local/bin/nebula -config /etc/nebula/config.yaml
 }
