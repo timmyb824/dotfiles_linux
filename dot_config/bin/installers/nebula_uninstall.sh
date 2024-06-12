@@ -33,6 +33,9 @@ remove_nebula_user() {
   if id "nebula" &>/dev/null; then
     sudo userdel -r nebula || exit_with_error "Failed to remove nebula user."
   fi
+  if [ -f /etc/sudoers.d/nebula ]; then
+    sudo rm /etc/sudoers.d/nebula || exit_with_error "Failed to remove nebula sudoers file."
+  fi
 }
 
 remove_nebula_binaries(){

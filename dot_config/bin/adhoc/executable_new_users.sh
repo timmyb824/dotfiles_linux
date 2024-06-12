@@ -9,12 +9,12 @@ if [ "$OS" != "Linux" ]; then
 fi
 
 # Prompt for variables
-read -p "Enter the username for the local system: " LOCAL_USER
-read -p "Enter the username for the remote SSH user: " SSH_REMOTE_USER
-read -p "Enter the public SSH key contents: " SSH_KEY_CONTENTS
-read -s -p "Enter the user's password: " SSH_PASSWORD
+read -r -p "Enter the username for the local system: " LOCAL_USER
+read -r -p "Enter the username for the remote SSH user: " SSH_REMOTE_USER
+read -r -p "Enter the public SSH key contents: " SSH_KEY_CONTENTS
+read -r -s -p "Enter the user's password: " SSH_PASSWORD
 echo ""
-read -p "Enter a salt for the password encryption: " SALT
+read -r -p "Enter a salt for the password encryption: " SALT
 echo ""
 
 # Function to check if a user exists

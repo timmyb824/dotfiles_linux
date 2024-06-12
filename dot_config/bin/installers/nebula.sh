@@ -25,7 +25,6 @@ setup_lighthouse() {
   sudo mv "${LH_NAME}".crt /etc/nebula/host.crt
   sudo mv "${LH_NAME}".key /etc/nebula/host.key
   sudo mv ca.crt /etc/nebula/
-  sudo mv ca.key /etc/nebula/
 
   create_systemd_service_file
   create_nebula_user
@@ -186,6 +185,13 @@ EOL
 create_nebula_user() {
   echo_with_color "$GREEN_COLOR" "Creating Nebula user..."
   sudo useradd -r -s /bin/false nebula
+  if [ ! -f /etc/sudoers.d/nebula ]; then
+      echo "nebula ALL=(ALL) NOPASSWD: ALL" | sudo EDITOR='tee' visudo -f /etc/sudoers.d/nebula
+      sudo chmod 0440 /etc/sudoers.d/nebula
+      echo_with_color "$GREEN_COLOR" "Sudoers file for nebula created"
+  else
+      echo_with_color "$GREEN_COLOR" "Sudoers file for nebula already exists"
+  fi
 }
 
 start_nebula_service() {
