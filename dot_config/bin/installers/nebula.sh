@@ -34,29 +34,6 @@ setup_lighthouse() {
   start_nebula_service
 }
 
-setup_host() {
-  echo "Setting up Host..."
-  read -p "Enter the name for the Host (e.g., server): " HOST_NAME
-  read -p "Enter the IP address for the Host (e.g., 192.168.100.9/24): " HOST_IP
-  read -p "Enter the routable IP address for the Lighthouse: " LH_ROUTABLE_IP
-
-  nebula-cert sign -name "${HOST_NAME}" -ip "${HOST_IP}" -ca-key "$HOME/ca.key" -ca-crt "$HOME/ca.crt"
-  if [ ! -f "${HOST_NAME}.crt" ] || [ ! -f "${HOST_NAME}.key" ]; then
-    exit_with_error "Failed to create certificate files for ${HOST_NAME}"
-  fi
-  sudo mkdir -p /etc/nebula
-
-  create_host_config
-
-  sudo mv "${HOST_NAME}".crt /etc/nebula/host.crt
-  sudo mv "${HOST_NAME}".key /etc/nebula/host.key
-  sudo mv "$HOME/ca.crt" /etc/nebula/
-
-  create_systemd_service_file
-  create_nebula_user
-  start_nebula_service
-}
-
 create_lighthouse_config() {
   echo_with_color "$GREEN_COLOR" "Creating Lighthouse config file..."
   sudo tee /etc/nebula/config.yaml >/dev/null <<EOL
@@ -97,6 +74,29 @@ firewall:
       proto: any
       host: any
 EOL
+}
+
+setup_host() {
+  echo "Setting up Host..."
+  read -p "Enter the name for the Host (e.g., server): " HOST_NAME
+  read -p "Enter the IP address for the Host (e.g., 192.168.100.9/24): " HOST_IP
+  read -p "Enter the IP address for the Lighthouse: " LH_IP
+
+  nebula-cert sign -name "${HOST_NAME}" -ip "${HOST_IP}" -ca-key "$HOME/ca.key" -ca-crt "$HOME/ca.crt"
+  if [ ! -f "${HOST_NAME}.crt" ] || [ ! -f "${HOST_NAME}.key" ]; then
+    exit_with_error "Failed to create certificate files for ${HOST_NAME}"
+  fi
+  sudo mkdir -p /etc/nebula
+
+  create_host_config
+
+  sudo mv "${HOST_NAME}".crt /etc/nebula/host.crt
+  sudo mv "${HOST_NAME}".key /etc/nebula/host.key
+  sudo mv "$HOME/ca.crt" /etc/nebula/
+
+  create_systemd_service_file
+  create_nebula_user
+  start_nebula_service
 }
 
 create_host_config() {
