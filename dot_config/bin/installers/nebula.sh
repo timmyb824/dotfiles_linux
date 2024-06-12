@@ -171,7 +171,7 @@ ProtectHome=true
 ProtectKernelTunables=true
 ProtectSystem=full
 User=nebula
-Group=neubla
+Group=nebula
 
 SyslogIdentifier=nebula
 
