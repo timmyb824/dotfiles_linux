@@ -23,7 +23,7 @@ setup_lighthouse() {
   curl -s -o /tmp/config.yaml https://raw.githubusercontent.com/slackhq/nebula/master/examples/config.yml
   sed -i 's/# am_lighthouse: false/am_lighthouse: true/' /tmp/config.yaml
   sed -i "s|#static_host_map:|static_host_map:\n  '$lh_ip': ['$lh_routable_ip:4242']|" /tmp/config.yaml
-  sed -i '/inbound:/a \  inbound:\n    - port: any\n      proto: any\n      host: any' /tmp/config.yaml
+  sed -i '/inbound:/a \    - port: any\n      proto: any\n      host: any' /tmp/config.yaml
 
   sudo mv /tmp/config.yaml /etc/nebula/config.yaml
   sudo mv "$lh_name".crt /etc/nebula/host.crt
@@ -31,19 +31,9 @@ setup_lighthouse() {
   sudo mv ca.crt /etc/nebula/
   mv ca.key "$HOME"
 
-  if command_exists zellij; then
-    echo_with_color "$GREEN_COLOR" "Starting Nebula with zellij..."
-    zellij -s nebula -c "sudo /usr/local/bin/nebula -config /etc/nebula/config.yaml"
-  elif command_exists screen; then
-    echo_with_color "$GREEN_COLOR" "Starting Nebula with screen..."
-    screen -dmS nebula sudo /usr/local/bin/nebula -config /etc/nebula/config.yaml
-  elif command_exists tmux; then
-    echo_with_color "$GREEN_COLOR" "Starting Nebula with tmux..."
-    tmux new-session -d -s nebula sudo /usr/local/bin/nebula -config /etc/nebula/config.yaml
-  else
-    echo_with_color "$GREEN_COLOR" "Starting Nebula..."
-    sudo /usr/local/bin/nebula -config /etc/nebula/config.yaml
-  fi
+  create_systemd_service_file
+  create_nebula_user
+  start_nebula_service
 }
 
 setup_host() {
@@ -59,7 +49,7 @@ setup_host() {
   sed -i "s|#static_host_map:|static_host_map:\n  '192.168.100.1': ['$lh_routable_ip:4242']|" /tmp/config.yaml
   sed -i 's/# am_lighthouse: false/am_lighthouse: false/' /tmp/config.yaml
   sed -i "s|# hosts:|hosts:\n    - '192.168.100.1'|" /tmp/config.yaml
-  sed -i '/inbound:/a \  inbound:\n    - port: any\n      proto: any\n      host: any' /tmp/config.yaml
+  sed -i '/inbound:/a \    - port: any\n      proto: any\n      host: any' /tmp/config.yaml
 
   sudo mv /tmp/config.yaml /etc/nebula/config.yaml
   sudo mv "$host_name".crt /etc/nebula/host.crt
@@ -67,19 +57,65 @@ setup_host() {
   sudo mv ca.crt /etc/nebula/
   mv ca.key "$HOME"
 
-  if command_exists zellij; then
-    echo_with_color "$GREEN_COLOR" "Starting Nebula with zellij..."
-    zellij -s nebula -c "sudo /usr/local/bin/nebula -config /etc/nebula/config.yaml"
-  elif command_exists screen; then
-    echo_with_color "$GREEN_COLOR" "Starting Nebula with screen..."
-    screen -dmS nebula sudo /usr/local/bin/nebula -config /etc/nebula/config.yaml
-  elif command_exists tmux; then
-    echo_with_color "$GREEN_COLOR" "Starting Nebula with tmux..."
-    tmux new-session -d -s nebula sudo /usr/local/bin/nebula -config /etc/nebula/config.yaml
-  else
-    echo_with_color "$GREEN_COLOR" "Starting Nebula..."
-    sudo /usr/local/bin/nebula -config /etc/nebula/config.yaml
-  fi
+  create_systemd_service_file
+  create_nebula_user
+  start_nebula_service
+}
+
+create_systemd_service_file() {
+    echo_with_color "$GREEN_COLOR" "Creating Nebula systemd service file..."
+    sudo tee /etc/systemd/system/nebula.service >/dev/null <<EOL
+# Systemd unit file for Nebula
+#
+
+[Unit]
+Description=Nebula
+Wants=basic.target
+After=basic.target network.target
+Before=sshd.service
+
+[Service]
+ExecStartPre=/usr/local/bin/nebula -test -config /etc/nebula/config.yaml
+ExecStart=/usr/local/bin/nebula -config /etc/nebula/config.yaml
+ExecReload=/bin/kill -HUP $MAINPID
+
+RuntimeDirectory=nebula
+ConfigurationDirectory=nebula
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+ProtectControlGroups=true
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectSystem=full
+User=nebula
+Group=neubla
+
+SyslogIdentifier=nebula
+
+Restart=always
+RestartSec=2
+TimeoutStopSec=5
+StartLimitInterval=0
+LimitNOFILE=131072
+
+Nice=-1
+
+[Install]
+WantedBy=multi-user.target
+EOL
+}
+
+create_nebula_user() {
+  echo_with_color "$GREEN_COLOR" "Creating Nebula user..."
+  sudo useradd -r -s /bin/false nebula
+}
+
+start_nebula_service() {
+    echo_with_color "$GREEN_COLOR" "Starting nebula service..."
+    sudo systemctl daemon-reload || exit_with_error "Failed to reload systemd daemon."
+    sudo systemctl enable --now nebula || exit_with_error "Failed to enable and start nebula service."
+    sudo systemctl status --no-pager nebula || exit_with_error "Failed to check nebula service status."
+    echo_with_color "$GREEN_COLOR" "nebula service started successfully."
 }
 
 main() {
