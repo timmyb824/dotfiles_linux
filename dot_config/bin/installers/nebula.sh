@@ -13,18 +13,17 @@ download_and_extract_nebula() {
 
 setup_lighthouse() {
   echo_with_color "$GREEN_COLOR" "Setting up Lighthouse..."
-  read -r -p "Enter the name for the Lighthouse (e.g., lighthouse1): " lh_name
-  read -r -p "Enter the IP address for the Lighthouse (e.g., 192.168.100.1/24): " lh_ip
-  read -r -p "Enter the routable IP address for the Lighthouse: " lh_routable_ip
+  read -r -p "Enter the name for the Lighthouse (e.g., lighthouse1): " LH_NAME
+  read -r -p "Enter the IP address for the Lighthouse (e.g., 192.168.100.1/24): " LH_IP
+  read -r -p "Enter the routable IP address for the Lighthouse: " LH_ROUTABLE_IP
 
-  nebula-cert sign -name "$lh_name" -ip "$lh_ip"
+  nebula-cert sign -name "${LH_NAME}" -ip "${LH_IP}" --ca-key "$HOME/ca.key"
   sudo mkdir -p /etc/nebula
 
   create_lighthouse_config
 
-  sudo mv /tmp/config.yaml /etc/nebula/config.yaml
-  sudo mv "$lh_name".crt /etc/nebula/host.crt
-  sudo mv "$lh_name".key /etc/nebula/host.key
+  sudo mv "${LH_NAME}".crt /etc/nebula/host.crt
+  sudo mv "${LH_NAME}".key /etc/nebula/host.key
   sudo mv ca.crt /etc/nebula/
   sudo mv ca.key /etc/nebula/
 
@@ -35,20 +34,18 @@ setup_lighthouse() {
 
 setup_host() {
   echo "Setting up Host..."
-  read -p "Enter the name for the Host (e.g., server): " host_name
-  read -p "Enter the IP address for the Host (e.g., 192.168.100.9/24): " host_ip
-  read -p "Enter the routable IP address for the Lighthouse: " lh_routable_ip
+  read -p "Enter the name for the Host (e.g., server): " HOST_NAME
+  read -p "Enter the IP address for the Host (e.g., 192.168.100.9/24): " HOST_IP
+  read -p "Enter the routable IP address for the Lighthouse: " LH_ROUTABLE_IP
 
-  nebula-cert sign -name "$host_name" -ip "$host_ip"
+  nebula-cert sign -name "${HOST_NAME}" -ip "${HOST_IP}" --ca-key "$HOME/ca.key"
   sudo mkdir -p /etc/nebula
 
   create_host_config
 
-  sudo mv /tmp/config.yaml /etc/nebula/config.yaml
-  sudo mv "$host_name".crt /etc/nebula/host.crt
-  sudo mv "$host_name".key /etc/nebula/host.key
+  sudo mv "${HOST_NAME}".crt /etc/nebula/host.crt
+  sudo mv "${HOST_NAME}".key /etc/nebula/host.key
   sudo mv ca.crt /etc/nebula/
-  mv ca.key "$HOME"
 
   create_systemd_service_file
   create_nebula_user
@@ -60,8 +57,8 @@ create_lighthouse_config() {
   sudo tee /etc/nebula/config.yaml >/dev/null <<EOL
 pki:
   ca: /etc/nebula/ca.crt
-  cert: /etc/nebula/$lh_name.crt
-  key: /etc/nebula/$lh_name.key
+  cert: /etc/nebula/host.crt
+  key: /etc/nebula/host.key
 
 static_host_map:
 
@@ -102,17 +99,17 @@ create_host_config() {
   sudo tee /etc/nebula/config.yaml >/dev/null <<EOL
 pki:
   ca: /etc/nebula/ca.crt
-  cert: /etc/nebula/$lh_name.crt
-  key: /etc/nebula/$lh_name.key
+  cert: /etc/nebula/host.crt
+  key: /etc/nebula/host.key
 
 static_host_map:
-  $lh_ip: [$lh_routable_ip:4242]
+  "${LH_IP}": [${LH_ROUTABLE_IP}:4242]
 
 lighthouse:
   am_lighthouse: false
   interval: 60
   hosts:
-    - $lh_ip
+    - "${LH_IP}"
 
 listen:
   host: 0.0.0.0
@@ -215,6 +212,7 @@ main() {
   if [ ! -f "$HOME/ca.key" ]; then
     echo_with_color "$GREEN_COLOR" "Creating Certificate Authority..."
     nebula-cert ca -name "BryantHomelab"
+    mv ca.key "$HOME"
   fi
 
   case $option in
