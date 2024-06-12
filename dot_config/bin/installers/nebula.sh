@@ -20,16 +20,13 @@ setup_lighthouse() {
   nebula-cert sign -name "$lh_name" -ip "$lh_ip"
   sudo mkdir -p /etc/nebula
 
-  curl -s -o /tmp/config.yaml https://raw.githubusercontent.com/slackhq/nebula/master/examples/config.yml
-  sed -i 's/# am_lighthouse: false/am_lighthouse: true/' /tmp/config.yaml
-  sed -i "s|#static_host_map:|static_host_map:\n  '$lh_ip': ['$lh_routable_ip:4242']|" /tmp/config.yaml
-  sed -i '/inbound:/a \    - port: any\n      proto: any\n      host: any' /tmp/config.yaml
+  create_lighthouse_config
 
   sudo mv /tmp/config.yaml /etc/nebula/config.yaml
   sudo mv "$lh_name".crt /etc/nebula/host.crt
   sudo mv "$lh_name".key /etc/nebula/host.key
   sudo mv ca.crt /etc/nebula/
-  mv ca.key "$HOME"
+  sudo mv ca.key /etc/nebula/
 
   create_systemd_service_file
   create_nebula_user
@@ -45,11 +42,7 @@ setup_host() {
   nebula-cert sign -name "$host_name" -ip "$host_ip"
   sudo mkdir -p /etc/nebula
 
-  curl -s -o /tmp/config.yaml https://raw.githubusercontent.com/slackhq/nebula/master/examples/config.yml
-  sed -i "s|#static_host_map:|static_host_map:\n  '192.168.100.1': ['$lh_routable_ip:4242']|" /tmp/config.yaml
-  sed -i 's/# am_lighthouse: false/am_lighthouse: false/' /tmp/config.yaml
-  sed -i "s|# hosts:|hosts:\n    - '192.168.100.1'|" /tmp/config.yaml
-  sed -i '/inbound:/a \    - port: any\n      proto: any\n      host: any' /tmp/config.yaml
+  create_host_config
 
   sudo mv /tmp/config.yaml /etc/nebula/config.yaml
   sudo mv "$host_name".crt /etc/nebula/host.crt
@@ -60,6 +53,94 @@ setup_host() {
   create_systemd_service_file
   create_nebula_user
   start_nebula_service
+}
+
+create_lighthouse_config() {
+  echo_with_color "$GREEN_COLOR" "Creating Lighthouse config file..."
+  sudo tee /etc/nebula/config.yaml >/dev/null <<EOL
+pki:
+  ca: /etc/nebula/ca.crt
+  cert: /etc/nebula/$lh_name.crt
+  key: /etc/nebula/$lh_name.key
+
+static_host_map:
+
+lighthouse:
+  am_lighthouse: true
+
+listen:
+  host: 0.0.0.0
+  port: 4242
+
+punchy:
+  punch: true
+
+logging:
+  level: info
+  format: text
+
+firewall:
+  conntrack:
+    tcp_timeout: 12m
+    udp_timeout: 3m
+    default_timeout: 10m
+
+  outbound:
+    - port: any
+      proto: any
+      host: any
+
+  inbound:
+    - port: any
+      proto: any
+      host: any
+EOL
+}
+
+create_host_config() {
+  echo_with_color "$GREEN_COLOR" "Creating Host config file..."
+  sudo tee /etc/nebula/config.yaml >/dev/null <<EOL
+pki:
+  ca: /etc/nebula/ca.crt
+  cert: /etc/nebula/$lh_name.crt
+  key: /etc/nebula/$lh_name.key
+
+static_host_map:
+  $lh_ip: [$lh_routable_ip:4242]
+
+lighthouse:
+  am_lighthouse: false
+  interval: 60
+  hosts:
+    - $lh_ip
+
+listen:
+  host: 0.0.0.0
+  port: 4242
+
+punchy:
+  punch: true
+
+logging:
+  level: info
+  format: text
+
+firewall:
+  conntrack:
+    tcp_timeout: 12m
+    udp_timeout: 3m
+    default_timeout: 10m
+
+  outbound:
+    - port: any
+      proto: any
+      host: any
+
+  inbound:
+    - port: any
+      proto: any
+      host: any
+EOL
 }
 
 create_systemd_service_file() {
@@ -119,6 +200,10 @@ start_nebula_service() {
 }
 
 main() {
+  if ! command_exists curl; then
+    exit_with_error "curl is required to download Nebula. Please install curl and run the script again."
+  fi
+
   echo "Nebula Overlay Network Setup Script"
   echo "==================================="
   echo "1. Setup Lighthouse"
