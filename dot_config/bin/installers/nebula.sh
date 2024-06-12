@@ -155,15 +155,30 @@ After=basic.target network.target
 Before=sshd.service
 
 [Service]
-CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
-AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
-User=nebula
-Group=nebula
-Type=simple
-LimitNOFILE=65535
 ExecStartPre=/usr/local/bin/nebula -test -config /etc/nebula/config.yaml
 ExecStart=/usr/local/bin/nebula -config /etc/nebula/config.yaml
-KillSignal=SIGINT
+ExecReload=/bin/kill -HUP $MAINPID
+
+RuntimeDirectory=nebula
+ConfigurationDirectory=nebula
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+ProtectControlGroups=true
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectSystem=full
+User=nebula
+Group=nebula
+
+SyslogIdentifier=nebula
+
+Restart=always
+RestartSec=2
+TimeoutStopSec=5
+StartLimitInterval=0
+LimitNOFILE=131072
+
+Nice=-1
 
 [Install]
 WantedBy=multi-user.target
