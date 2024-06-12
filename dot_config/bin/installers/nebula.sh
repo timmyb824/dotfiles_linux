@@ -17,14 +17,17 @@ setup_lighthouse() {
   read -r -p "Enter the IP address for the Lighthouse (e.g., 192.168.100.1/24): " LH_IP
   read -r -p "Enter the routable IP address for the Lighthouse: " LH_ROUTABLE_IP
 
-  nebula-cert sign -name "${LH_NAME}" -ip "${LH_IP}" --ca-key "$HOME/ca.key"
+  nebula-cert sign -name "${LH_NAME}" -ip "${LH_IP}" --ca-key "$HOME/ca.key" --ca-cert "$HOME/ca.crt"
+  if [ ! -f "${HOST_NAME}.crt" ] || [ ! -f "${HOST_NAME}.key" ]; then
+    exit_with_error "Failed to create certificate files for ${HOST_NAME}"
+  fi
   sudo mkdir -p /etc/nebula
 
   create_lighthouse_config
 
   sudo mv "${LH_NAME}".crt /etc/nebula/host.crt
   sudo mv "${LH_NAME}".key /etc/nebula/host.key
-  sudo mv ca.crt /etc/nebula/
+  sudo mv "$HOME/ca.crt" /etc/nebula/
 
   create_systemd_service_file
   create_nebula_user
@@ -37,14 +40,17 @@ setup_host() {
   read -p "Enter the IP address for the Host (e.g., 192.168.100.9/24): " HOST_IP
   read -p "Enter the routable IP address for the Lighthouse: " LH_ROUTABLE_IP
 
-  nebula-cert sign -name "${HOST_NAME}" -ip "${HOST_IP}" --ca-key "$HOME/ca.key"
+  nebula-cert sign -name "${HOST_NAME}" -ip "${HOST_IP}" --ca-key "$HOME/ca.key" --ca-cert "$HOME/ca.crt"
+  if [ ! -f "${HOST_NAME}.crt" ] || [ ! -f "${HOST_NAME}.key" ]; then
+    exit_with_error "Failed to create certificate files for ${HOST_NAME}"
+  fi
   sudo mkdir -p /etc/nebula
 
   create_host_config
 
   sudo mv "${HOST_NAME}".crt /etc/nebula/host.crt
   sudo mv "${HOST_NAME}".key /etc/nebula/host.key
-  sudo mv ca.crt /etc/nebula/
+  sudo mv "$HOME/ca.crt" /etc/nebula/
 
   create_systemd_service_file
   create_nebula_user
@@ -220,6 +226,7 @@ main() {
     echo_with_color "$GREEN_COLOR" "Creating Certificate Authority..."
     nebula-cert ca -name "BryantHomelab"
     mv ca.key "$HOME"
+    mv ca.crt "$HOME"
   fi
 
   case $option in
