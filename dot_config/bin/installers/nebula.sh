@@ -28,7 +28,7 @@ setup_lighthouse() {
   sudo mkdir -p /etc/nebula
 
   # Download and configure example config
-  curl -o /tmp/config-lighthouse.yaml https://raw.githubusercontent.com/slackhq/nebula/master/examples/config.yml
+  curl -o /tmp/config.yaml https://raw.githubusercontent.com/slackhq/nebula/master/examples/config.yml
   sed -i 's/# am_lighthouse: false/am_lighthouse: true/' /tmp/config-lighthouse.yaml
   sed -i "s/#static_host_map:/static_host_map:\n  '$lh_ip': ['$lh_routable_ip:4242']/" /tmp/config-lighthouse.yaml
   sed -i '/inbound:/a \  inbound:\n    - port: any\n      proto: any\n      host: any' /tmp/config.yaml
