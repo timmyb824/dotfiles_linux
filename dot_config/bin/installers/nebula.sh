@@ -18,8 +18,8 @@ setup_lighthouse() {
   read -r -p "Enter the routable IP address for the Lighthouse: " LH_ROUTABLE_IP
 
   nebula-cert sign -name "${LH_NAME}" -ip "${LH_IP}" -ca-key "$HOME/ca.key" -ca-crt "$HOME/ca.crt"
-  if [ ! -f "${HOST_NAME}.crt" ] || [ ! -f "${HOST_NAME}.key" ]; then
-    exit_with_error "Failed to create certificate files for ${HOST_NAME}"
+  if [ ! -f "${LH_NAME}.crt" ] || [ ! -f "${LH_NAME}.key" ]; then
+    exit_with_error "Failed to create certificate files for ${LH_NAME}"
   fi
   sudo mkdir -p /etc/nebula
 
