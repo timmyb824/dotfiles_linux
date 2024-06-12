@@ -109,7 +109,7 @@ pki:
   key: /etc/nebula/host.key
 
 static_host_map:
-  "${LH_IP}": [${LH_ROUTABLE_IP}:4242]
+  "${LH_IP}": ["${LH_ROUTABLE_IP}:4242"]
 
 lighthouse:
   am_lighthouse: false
