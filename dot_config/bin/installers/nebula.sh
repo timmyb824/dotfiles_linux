@@ -29,6 +29,7 @@ setup_lighthouse() {
   sudo mv "$lh_name".crt /etc/nebula/host.crt
   sudo mv "$lh_name".key /etc/nebula/host.key
   sudo mv ca.crt /etc/nebula/
+  mv ca.key "$HOME"
 
   if command_exists zellij; then
     echo_with_color "$GREEN_COLOR" "Starting Nebula with zellij..."
@@ -64,6 +65,7 @@ setup_host() {
   sudo mv "$host_name".crt /etc/nebula/host.crt
   sudo mv "$host_name".key /etc/nebula/host.key
   sudo mv ca.crt /etc/nebula/
+  mv ca.key "$HOME"
 
   if command_exists zellij; then
     echo_with_color "$GREEN_COLOR" "Starting Nebula with zellij..."
@@ -92,7 +94,6 @@ main() {
   if [ ! -f "$HOME/ca.key" ]; then
     echo_with_color "$GREEN_COLOR" "Creating Certificate Authority..."
     nebula-cert ca -name "BryantHomelab"
-    mv ca.key "$HOME"
   fi
 
   case $option in
