@@ -22,7 +22,7 @@ setup_lighthouse() {
 
   curl -s -o /tmp/config.yaml https://raw.githubusercontent.com/slackhq/nebula/master/examples/config.yml
   sed -i 's/# am_lighthouse: false/am_lighthouse: true/' /tmp/config.yaml
-  sed -i "s/#static_host_map:/static_host_map:\n  '$lh_ip': ['$lh_routable_ip:4242']/" /tmp/config.yaml
+  sed -i "s|#static_host_map:|static_host_map:\n  '$lh_ip': ['$lh_routable_ip:4242']|" /tmp/config.yaml
   sed -i '/inbound:/a \  inbound:\n    - port: any\n      proto: any\n      host: any' /tmp/config.yaml
 
   sudo mv /tmp/config.yaml /etc/nebula/config.yaml
@@ -56,9 +56,9 @@ setup_host() {
   sudo mkdir -p /etc/nebula
 
   curl -s -o /tmp/config.yaml https://raw.githubusercontent.com/slackhq/nebula/master/examples/config.yml
-  sed -i "s/#static_host_map:/static_host_map:\n  '192.168.100.1': ['$lh_routable_ip:4242']/" /tmp/config.yaml
+  sed -i "s|#static_host_map:|static_host_map:\n  '192.168.100.1': ['$lh_routable_ip:4242']|" /tmp/config.yaml
   sed -i 's/# am_lighthouse: false/am_lighthouse: false/' /tmp/config.yaml
-  sed -i "s/# hosts:/hosts:\n    - '192.168.100.1'/" /tmp/config.yaml
+  sed -i "s|# hosts:|hosts:\n    - '192.168.100.1'|" /tmp/config.yaml
   sed -i '/inbound:/a \  inbound:\n    - port: any\n      proto: any\n      host: any' /tmp/config.yaml
 
   sudo mv /tmp/config.yaml /etc/nebula/config.yaml
