@@ -9,6 +9,7 @@ download_and_extract_nebula() {
   tar -xzf nebula-linux-amd64.tar.gz
   sudo mv nebula /usr/local/bin/
   sudo mv nebula-cert /usr/local/bin/
+  rm nebula-linux-amd64.tar.gz
 }
 
 # Function to set up the Lighthouse
@@ -115,7 +116,7 @@ main() {
   download_and_extract_nebula
 
   # Create CA certificate if it does not exist
-  if [ ! -f ca.crt ]; then
+  if [ ! -f ca.key ]; then
     printf "Creating Certificate Authority...\n"
     nebula-cert ca -name "BryantHomelab"
   fi
