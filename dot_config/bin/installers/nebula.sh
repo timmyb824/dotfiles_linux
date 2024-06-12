@@ -80,8 +80,8 @@ setup_host() {
   echo "Setting up Host..."
   read -r -p "Enter the name for the Host (e.g., server): " HOST_NAME
   read -r -p "Enter the nebula IP address for the Host (e.g., 192.168.100.9/24): " HOST_IP
-  read -r -p "Enter the public IP/DNS address for the Lighthouse: " LH_IP
-  read -r -p "Enter the nebula IP address for the Lighthouse: " LH_ROUTABLE_IP
+  read -r -p "Enter the public IP/DNS address for the Lighthouse: " LH_ROUTABLE_IP
+  read -r -p "Enter the nebula IP address for the Lighthouse: " LH_IP
 
   nebula-cert sign -name "${HOST_NAME}" -ip "${HOST_IP}" -ca-key "$HOME/ca.key" -ca-crt "$HOME/ca.crt"
   if [ ! -f "${HOST_NAME}.crt" ] || [ ! -f "${HOST_NAME}.key" ]; then
