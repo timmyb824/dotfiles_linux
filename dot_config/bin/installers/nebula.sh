@@ -194,6 +194,7 @@ create_nebula_user() {
   if [ ! -f /etc/sudoers.d/nebula ]; then
       echo "nebula ALL=(root) NOPASSWD: /bin/systemctl start nebula, /bin/systemctl stop nebula, /bin/systemctl restart nebula, /bin/systemctl status nebula" | sudo EDITOR='tee' visudo -f /etc/sudoers.d/nebula >/dev/null
       sudo chmod 0440 /etc/sudoers.d/nebula
+      sudo chown -R nebula:nebula /etc/nebula
       echo_with_color "$GREEN_COLOR" "Sudoers file for nebula created"
   else
       echo_with_color "$GREEN_COLOR" "Sudoers file for nebula already exists"
