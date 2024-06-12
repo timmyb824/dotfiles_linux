@@ -48,6 +48,16 @@ remove_nebula_binaries(){
   fi
 }
 
+remove_ca_key_and_cert() {
+  echo_with_color "$GREEN_COLOR" "Removing CA key and certificate..."
+  if [ -f "$HOME/ca.key" ]; then
+    rm "$HOME/ca.key" || exit_with_error "Failed to remove CA key."
+  fi
+  if [ -f "$HOME/ca.crt" ]; then
+    rm "$HOME/ca.crt" || exit_with_error "Failed to remove CA certificate."
+  fi
+}
+
 main() {
   echo "Nebula Overlay Network Teardown Script"
   echo "====================================="
