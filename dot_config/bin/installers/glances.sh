@@ -40,7 +40,7 @@ create_virtualenv() {
         exit_with_error "Failed to create virtual environment."
     fi
 
-    if ! $PYENV_BIN local glances; then
+    if ! $PYENV_BIN activate glances; then
         exit_with_error "Failed to set local virtual environment."
     fi
 }
