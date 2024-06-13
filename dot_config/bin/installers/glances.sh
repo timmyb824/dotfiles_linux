@@ -40,7 +40,7 @@ create_virtualenv() {
         exit_with_error "Failed to create virtual environment."
     fi
 
-    if ! $PYENV_BIN activate glances; then
+    if ! $PYENV_BIN local glances; then
         exit_with_error "Failed to set local virtual environment."
     fi
 }
@@ -285,6 +285,12 @@ start_glances_service() {
     echo_with_color "$GREEN_COLOR" "Glances service started successfully."
 }
 
+move_python_version_file(){
+    if [ -f "${WORKING_DIR}/.python-version" ]; then
+        mv .python-version "$WORKING_DIR/.python-version"
+    fi
+}
+
 main() {
     create_directories
     create_virtualenv
@@ -292,6 +298,7 @@ main() {
     create_config_file
     create_systemd_service_file
     start_glances_service
+    move_python_version_file
 }
 
 main
