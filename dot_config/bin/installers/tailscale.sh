@@ -47,7 +47,7 @@ install_tailscale_linux() {
 authenticate_tailscale() {
     read -sp "Please enter your Tailscale authorization key: " TAILSCALE_AUTH_KEY
     echo
-    if sudo tailscale up --authkey="$TAILSCALE_AUTH_KEY" --operator="$USER"; then
+    if sudo tailscale up --authkey="$TAILSCALE_AUTH_KEY" --operator="$USER" --accept-routes=true; then
         echo_with_color "$GREEN_COLOR" "Tailscale has started successfully."
     else
         exit_with_error "Failed to start Tailscale with the provided authorization key."
