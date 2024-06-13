@@ -2,6 +2,15 @@
 
 source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
+create_ca_key_crt() {
+  if [ ! -f "$HOME/ca.key" ] || [ ! -f "$HOME/ca.crt" ]; then
+    echo_with_color "$GREEN_COLOR" "Creating Certificate Authority..."
+    nebula-cert ca -name "BryantHomelab"
+    mv ca.key "$HOME"
+    mv ca.crt "$HOME"
+  fi
+}
+
 download_and_extract_nebula() {
   echo_with_color "$GREEN_COLOR" "Downloading Nebula..."
   curl -sLO https://github.com/slackhq/nebula/releases/download/v1.9.3/nebula-linux-amd64.tar.gz
@@ -16,6 +25,8 @@ setup_lighthouse() {
   read -r -p "Enter the name for the Lighthouse (e.g., lighthouse1): " LH_NAME
   read -r -p "Enter the nebula IP address for the Lighthouse (e.g., 192.168.100.1/24): " LH_IP
   read -r -p "Enter the public IP/DNS address for the Lighthouse server: " LH_ROUTABLE_IP
+
+  create_ca_key_crt
 
   nebula-cert sign -name "${LH_NAME}" -ip "${LH_IP}" -ca-key "$HOME/ca.key" -ca-crt "$HOME/ca.crt"
   if [ ! -f "${LH_NAME}.crt" ] || [ ! -f "${LH_NAME}.key" ]; then
@@ -77,6 +88,10 @@ EOL
 }
 
 setup_host() {
+  if [ ! -f "$HOME/ca.key" ] || [ ! -f "$HOME/ca.crt" ]; then
+    exit_with_error "Certificate Authority key and certificate not found. Please setup Lighthouse or copy the CA files"
+  fi
+
   echo "Setting up Host..."
   read -r -p "Enter the name for the Host (e.g., server): " HOST_NAME
   read -r -p "Enter the nebula IP address for the Host (e.g., 192.168.100.9/24): " HOST_IP
@@ -220,13 +235,6 @@ main() {
   read -r -p "Choose an option (1 or 2): " option
 
   download_and_extract_nebula
-
-  if [ ! -f "$HOME/ca.key" ]; then
-    echo_with_color "$GREEN_COLOR" "Creating Certificate Authority..."
-    nebula-cert ca -name "BryantHomelab"
-    mv ca.key "$HOME"
-    mv ca.crt "$HOME"
-  fi
 
   case $option in
     1) setup_lighthouse ;;
