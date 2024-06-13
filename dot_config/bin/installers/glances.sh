@@ -286,7 +286,8 @@ start_glances_service() {
 }
 
 move_python_version_file(){
-    if [ -f "${WORKING_DIR}/.python-version" ]; then
+    echo_with_color "$GREEN_COLOR" "Moving .python-version file..."
+    if [ ! -f "${WORKING_DIR}/.python-version" ]; then
         mv .python-version "$WORKING_DIR/.python-version"
     fi
 }
