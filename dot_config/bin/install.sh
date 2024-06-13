@@ -63,6 +63,7 @@ declare -a scripts_to_run=(
     "package-managers/gitopolis.sh"
     "installers/fonts.sh"
     "installers/jetbrainsmono_font.sh"
+    "installers/glances.sh"
     "installers/zsh_shell.sh"
     "installers/misc.sh"
 )
