@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source "$(dirname "$BASH_SOURCE")/../init/init.sh"
+
 # Define variables
 INSTALL_DIR="/usr/local/bin"
 SERVICE_FILE="/etc/systemd/system/node_exporter.service"
