@@ -58,7 +58,7 @@ install_dependencies() {
 
 create_config_file() {
     echo ""
-    read -r -s -p "Enter your InfluxDB token: " INFLUXDB_TOKEN
+    read -r -p "Enter your InfluxDB token: " INFLUXDB_TOKEN
     echo ""
     read -r -p "Enter your Podman UNIX socket path e.g. unix:///run/user/1000/podman/podman.sock (leave blank if not using Podman): " PODMAN_UNIX
     echo_with_color "$GREEN_COLOR" "Creating glances config file..."
