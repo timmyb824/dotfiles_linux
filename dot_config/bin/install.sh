@@ -64,6 +64,7 @@ declare -a scripts_to_run=(
     "installers/fonts.sh"
     "installers/jetbrainsmono_font.sh"
     "installers/glances.sh"
+    "installers/node_exporter.sh"
     "installers/zsh_shell.sh"
     "installers/misc.sh"
 )
