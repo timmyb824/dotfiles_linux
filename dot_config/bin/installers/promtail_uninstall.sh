@@ -47,7 +47,7 @@ if command_exists promtail; then
     uninstall_promtail
 
     # Remove promtail user from the adm group
-    remove_promtail_from_groups
+    remove_promtail_user
 
     # Cleanup Promtail-related files and directories
     cleanup_promtail
