@@ -17,9 +17,9 @@ alias kns='kubectl ns'
 alias kcx='kubectl ctx'
 alias lg="lazygit"
 alias ldot="eza --icons=always -ld .*"
-alias la="eza --icons=always -lAh"
+alias la="eza --icons=always -lAh --group"
 alias ls="eza --icons=always"
-alias ll="eza --icons=always -lh"
+alias ll="eza --icons=always -lh --group"
 alias lst="eza --icons=always --tree"
 alias oc="opencommit"
 alias po=podman
