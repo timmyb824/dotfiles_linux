@@ -35,6 +35,16 @@ install_promtail() {
     echo_with_color "$GREEN" "Cleanup complete."
 }
 
+create_promtail_user() {
+    # check if promtail user exists and create it if it doesn't
+    echo_with_color "$GREEN" "Checking for promtail user..."
+    if ! id promtail &>/dev/null; then
+        echo_with_color "$YELLOW" "Promtail user not found. Creating promtail user..."
+        sudo useradd --system promtail || echo_with_color "$RED" "Failed to create promtail user."
+    fi
+    echo_with_color "$GREEN" "Promtail user found."
+}
+
 add_promtail_to_adm_group() {
     echo_with_color "$GREEN" "Adding promtail user to the adm group..."
     sudo usermod -aG adm promtail || echo_with_color "$RED" "Failed to add promtail user to the adm group."
@@ -108,6 +118,9 @@ restart_promtail() {
 if ! command_exists promtail; then
     # Install Promtail
     install_promtail "$PROMTAIL_VERSION"
+
+    # Create promtail user
+    create_promtail_user
 
     # Add promtail user to the adm group
     add_promtail_to_adm_group
