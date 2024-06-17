@@ -48,8 +48,9 @@ create_promtail_user() {
 add_promtail_to_adm_group() {
     echo_with_color "$GREEN" "Adding promtail user to the adm group..."
     sudo usermod -aG adm promtail || echo_with_color "$RED" "Failed to add promtail user to the adm group."
+    echo_with_color "$GREEN" "Adding promtail user to the systemd-journal group..."
     sudo usermod -aG systemd-journal promtail || echo_with_color "$RED" "Failed to add promtail user to the systemd-journal group."
-    echo_with_color "$GREEN" "Added promtail user to the adm group."
+    echo_with_color "$GREEN" "Added promtail user to the adm and systemd-journal groups."
 }
 
 configure_promtail() {
