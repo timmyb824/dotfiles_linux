@@ -8,7 +8,7 @@ USER=$CURRENT_USER
 
 install_dependencies() {
     echo_with_color "$GREEN_COLOR" "Installing dependencies..."
-    sudo apt install -y btrfs-progs-devel device-mapper-devel gpgme-devel libassuan-devel || exit_with_error "Failed to install dependencies."
+    sudo apt install -y btrfs-progs libdevmapper-dev libgpgme-dev libassuan-dev || exit_with_error "Failed to install dependencies."
 }
 
 clone_podman_exporter() {
