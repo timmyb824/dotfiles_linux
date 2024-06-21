@@ -3,7 +3,7 @@
 source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
 SERVICE_FILE="/etc/systemd/system/podman_exporter.service"
-REPO_LOCATION="DEV/podman_exporter"
+REPO_LOCATION="$HOME/DEV/podman_exporter"
 USER=$CURRENT_USER
 
 clone_podman_exporter() {
