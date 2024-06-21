@@ -35,7 +35,7 @@ After=network-online.target
 [Service]
 User=$USER
 WorkingDirectory=$REPO_LOCATION
-ExecStart=$REPO_LOCATION/bin/prometheus-podman-exporter --collector.enable-all
+ExecStart=$REPO_LOCATION/bin/prometheus-podman-exporter -a
 Restart=always
 RestartSec=30s
 TimeoutSec=30s

@@ -95,7 +95,7 @@ install_podman() {
         return 1
     fi
 
-    if ! echo "unqualified-search-registries = [\"docker.io\"]" >>"$config_dir/registries.conf"; then
+    if ! echo "unqualified-search-registries = [\"docker.io\",\"quay.io\"]" >>"$config_dir/registries.conf"; then
         echo_with_color "31" "Failed to add docker.io to registry configuration."
         return 1
     fi
