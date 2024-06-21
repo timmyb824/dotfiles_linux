@@ -33,8 +33,8 @@ EOL
 start_node_exporter_service() {
     echo_with_color "$GREEN_COLOR" "Starting node_exporter service..."
     sudo systemctl daemon-reload || exit_with_error "Failed to reload systemd daemon."
-    sudo systemctl enable --now node_exporter || exit_with_error "Failed to enable and start glances service."
-    sudo systemctl status --no-pager node_exporter || exit_with_error "Failed to check glances service status."
+    sudo systemctl enable --now node_exporter || exit_with_error "Failed to enable and start podman service."
+    sudo systemctl status --no-pager node_exporter || exit_with_error "Failed to check podman service status."
     echo_with_color "$GREEN_COLOR" "node_exporter service started successfully."
 }
 
