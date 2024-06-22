@@ -5,7 +5,7 @@ source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 # SERVICE_FILE="/etc/systemd/system/podman_exporter.service"
 REPO_LOCATION="$HOME/DEV/podman_exporter"
 USER=$CURRENT_USER
-SCRIPT_LOCATION="$HOME/DEV/scripts"
+SCRIPT_LOCATION="$HOME/DEV/scripts/podman_exporter"
 SCRIPT_NAME="podman_exporter.sh"
 
 install_dependencies() {
@@ -25,15 +25,15 @@ clone_podman_exporter() {
 }
 
 create_nohup_script() {
-    echo_with_color "$GREEN_COLOR" "Creatining directory for scripts..."
+    echo_with_color "$GREEN_COLOR" "Creating directory for scripts..."
     mkdir -p "$SCRIPT_LOCATION" || exit_with_error "Failed to create directory: $SCRIPT_LOCATION"
     echo_with_color "$GREEN_COLOR" "Creating nohup script..."
-    tee "$SCRIPT_LOCATION/$SCRIPT_NAME" >/dev/null <<EOL
+    tee "$SCRIPT_LOCATION/$SCRIPT_NAME" >/dev/null <<'EOL'
 #!/bin/bash
 
 # Define variables
-TOOL_PATH="$REPO_LOCATION/bin/prometheus-podman-exporter"
-LOG_FILE="$SCRIPT_LOCATION/podman_exporter.log"
+TOOL_PATH="'"$REPO_LOCATION/bin/prometheus-podman-exporter"'"
+LOG_FILE="'"$SCRIPT_LOCATION/podman_exporter.log"'"
 ARGS="-a"
 
 # Run the tool with nohup
