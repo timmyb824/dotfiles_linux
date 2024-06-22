@@ -4,6 +4,8 @@ source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
 # SERVICE_FILE="/etc/systemd/system/podman_exporter.service"
 REPO_LOCATION="$HOME/DEV/podman_exporter"
+BIN_LOCATION="$REPO_LOCATION/bin"
+BIN_NAME="prometheus-podman-exporter"
 USER=$CURRENT_USER
 SCRIPT_LOCATION="$HOME/DEV/scripts/podman_exporter"
 SCRIPT_NAME="podman_exporter.sh"
@@ -21,8 +23,8 @@ delete_repo_directory() {
 # check if script is running via nohup and kill the process
 kill_nohup_process() {
     echo_with_color "$RED_COLOR" "Killing nohup process..."
-    if pgrep -f "$SCRIPT_NAME" > /dev/null; then
-        pkill -f "$SCRIPT_NAME" || exit_with_error "Failed to kill nohup process."
+    if pgrep -f "$BIN_LOCATION/$BIN_NAME" > /dev/null; then
+        pkill -f "$BIN_LOCATION/$BIN_NAME" || exit_with_error "Failed to kill nohup process."
     else
         echo_with_color "$YELLOW_COLOR" "No nohup process found."
     fi
