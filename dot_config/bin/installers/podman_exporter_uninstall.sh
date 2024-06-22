@@ -5,7 +5,7 @@ source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 # SERVICE_FILE="/etc/systemd/system/podman_exporter.service"
 REPO_LOCATION="$HOME/DEV/podman_exporter"
 USER=$CURRENT_USER
-SCRIPT_LOCATION="$HOME/DEV/scripts"
+SCRIPT_LOCATION="$HOME/DEV/scripts/podman_exporter"
 SCRIPT_NAME="podman_exporter.sh"
 
 # Function to delete the repository directory
@@ -28,12 +28,12 @@ kill_nohup_process() {
     fi
 }
 
-delete_script_file() {
-    echo_with_color "$RED_COLOR" "Deleting nohup script..."
-    if [ -f "$SCRIPT_LOCATION/$SCRIPT_NAME" ]; then
-        rm "$SCRIPT_LOCATION/$SCRIPT_NAME" || exit_with_error "Failed to delete script file: $SCRIPT_LOCATION/$SCRIPT_NAME"
+delete_scripts_folder() {
+    echo_with_color "$RED_COLOR" "Deleting scripts folder..."
+    if [ -d "$SCRIPT_LOCATION" ]; then
+        rm -rf "$SCRIPT_LOCATION" || exit_with_error "Failed to delete directory: $SCRIPT_LOCATION"
     else
-        echo_with_color "$YELLOW_COLOR" "Script file $SCRIPT_LOCATION/$SCRIPT_NAME does not exist."
+        echo_with_color "$YELLOW_COLOR" "Directory $SCRIPT_LOCATION does not exist."
     fi
 }
 
@@ -68,7 +68,7 @@ main() {
     # stop_and_disable_service
     # delete_systemd_service_file
     kill_nohup_process
-    delete_script_file
+    delete_scripts_folder
     delete_repo_directory
 
     echo_with_color "$GREEN_COLOR" "Podman Exporter uninstallation completed successfully."

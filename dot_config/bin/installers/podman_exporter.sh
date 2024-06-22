@@ -7,6 +7,7 @@ REPO_LOCATION="$HOME/DEV/podman_exporter"
 USER=$CURRENT_USER
 SCRIPT_LOCATION="$HOME/DEV/scripts/podman_exporter"
 SCRIPT_NAME="podman_exporter.sh"
+LOG_NAME="podman_exporter.log"
 
 install_dependencies() {
     echo_with_color "$GREEN_COLOR" "Installing dependencies..."
@@ -27,6 +28,8 @@ clone_podman_exporter() {
 create_nohup_script() {
     echo_with_color "$GREEN_COLOR" "Creating directory for scripts..."
     mkdir -p "$SCRIPT_LOCATION" || exit_with_error "Failed to create directory: $SCRIPT_LOCATION"
+    echo_with_color "$GREEN_COLOR" "Creating log file..."
+    touch "$SCRIPT_LOCATION/$LOG_NAME" || exit_with_error "Failed to create log file."
     echo_with_color "$GREEN_COLOR" "Creating nohup script..."
     tee "$SCRIPT_LOCATION/$SCRIPT_NAME" >/dev/null <<'EOL'
 #!/bin/bash
