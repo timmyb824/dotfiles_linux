@@ -31,19 +31,19 @@ create_nohup_script() {
     echo_with_color "$GREEN_COLOR" "Creating log file..."
     touch "$SCRIPT_LOCATION/$LOG_NAME" || exit_with_error "Failed to create log file."
     echo_with_color "$GREEN_COLOR" "Creating nohup script..."
-    tee "$SCRIPT_LOCATION/$SCRIPT_NAME" >/dev/null <<'EOL'
+    tee "$SCRIPT_LOCATION/$SCRIPT_NAME" >/dev/null <<EOL
 #!/bin/bash
 
 # Define variables
-TOOL_PATH="'"$REPO_LOCATION/bin/prometheus-podman-exporter"'"
-LOG_FILE="'"$SCRIPT_LOCATION/podman_exporter.log"'"
+TOOL_PATH="$REPO_LOCATION/bin/prometheus-podman-exporter"
+LOG_FILE="$SCRIPT_LOCATION/podman_exporter.log"
 ARGS="-a"
 
 # Run the tool with nohup
-nohup $TOOL_PATH $ARGS > $LOG_FILE 2>&1 &
+nohup \$TOOL_PATH \$ARGS > \$LOG_FILE 2>&1 &
 
 # Output the PID of the background process
-echo "Podman Exporter is running with PID $!"
+echo "Podman Exporter is running with PID \$!"
 EOL
 }
 
