@@ -2,9 +2,11 @@
 
 source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
-SERVICE_FILE="/etc/systemd/system/podman_exporter.service"
+# SERVICE_FILE="/etc/systemd/system/podman_exporter.service"
 REPO_LOCATION="$HOME/DEV/podman_exporter"
 USER=$CURRENT_USER
+SCRIPT_LOCATION="$HOME/DEV/scripts"
+SCRIPT_NAME="podman_exporter.sh"
 
 install_dependencies() {
     echo_with_color "$GREEN_COLOR" "Installing dependencies..."
@@ -22,50 +24,73 @@ clone_podman_exporter() {
     make binary || exit_with_error "Failed to build podman_exporter."
 }
 
-# Function to create systemd service file
-create_systemd_service_file() {
-    echo_with_color "$GREEN_COLOR" "Creating Podman Exporter systemd service file..."
+create_nohup_script() {
+    echo_with_color "$GREEN_COLOR" "Creatining directory for scripts..."
+    mkdir -p "$SCRIPT_LOCATION" || exit_with_error "Failed to create directory: $SCRIPT_LOCATION"
+    echo_with_color "$GREEN_COLOR" "Creating nohup script..."
+    tee "$SCRIPT_LOCATION/$SCRIPT_NAME" >/dev/null <<EOL
+#!/bin/bash
 
-    sudo tee $SERVICE_FILE > /dev/null <<EOL
-[Unit]
-Description=Podman Exporter
-After=network-online.target
+# Define variables
+TOOL_PATH="$REPO_LOCATION/bin/prometheus-podman-exporter"
+LOG_FILE="$SCRIPT_LOCATION/podman_exporter.log"
+ARGS="-a"
 
-[Service]
-Type=simple
-User=$USER
-ExecStart=$REPO_LOCATION/bin/prometheus-podman-exporter -a
-Restart=on-failure
-RestartSec=5
+# Run the tool with nohup
+nohup $TOOL_PATH $ARGS > $LOG_FILE 2>&1 &
 
-[Install]
-WantedBy=multi-user.target
-
+# Output the PID of the background process
+echo "Podman Exporter is running with PID $!"
 EOL
 }
 
-start_podman_exporter_service() {
-    echo_with_color "$GREEN_COLOR" "Starting podman service..."
-    sudo systemctl daemon-reload || exit_with_error "Failed to reload systemd daemon."
-    sudo systemctl enable --now podman_exporter || exit_with_error "Failed to enable and start podman service."
-    sudo systemctl status --no-pager podman_exporter || exit_with_error "Failed to check podman service status."
-    echo_with_color "$GREEN_COLOR" "podman_exporter service started successfully."
+run_nohup_script() {
+    echo_with_color "$GREEN_COLOR" "Running nohup script..."
+    chmod +x "$SCRIPT_LOCATION/$SCRIPT_NAME" || exit_with_error "Failed to make script executable."
+    "$SCRIPT_LOCATION/$SCRIPT_NAME" || exit_with_error "Failed to run nohup script."
 }
+
+# create_systemd_service_file() {
+#     echo_with_color "$GREEN_COLOR" "Creating Podman Exporter systemd service file..."
+
+#     sudo tee $SERVICE_FILE > /dev/null <<EOL
+# [Unit]
+# Description=Podman Exporter
+# After=network-online.target
+
+# [Service]
+# Type=simple
+# User=$USER
+# ExecStart=$REPO_LOCATION/bin/prometheus-podman-exporter -a
+# Restart=on-failure
+# RestartSec=5
+
+# [Install]
+# WantedBy=multi-user.target
+
+# EOL
+# }
+
+# start_podman_exporter_service() {
+#     echo_with_color "$GREEN_COLOR" "Starting podman service..."
+#     sudo systemctl daemon-reload || exit_with_error "Failed to reload systemd daemon."
+#     sudo systemctl enable --now podman_exporter || exit_with_error "Failed to enable and start podman service."
+#     sudo systemctl status --no-pager podman_exporter || exit_with_error "Failed to check podman service status."
+#     echo_with_color "$GREEN_COLOR" "podman_exporter service started successfully."
+# }
 
 # Main script
 main() {
-    if ! command_exists "podman"; then
-        exit_with_error "Podman is not installed. Please install Podman first."
-    fi
-
-    if ! command_exists "git"; then
-        exit_with_error "Git is not installed. Please install Git first."
+    if ! command_exists "podman" || ! command_exists "git" || ! command_exists "make" || ! command_exists "nohup"; then
+        exit_with_error "One or more dependencies are not installed. Please install Podman, Git, Make, and ensure that nohup is available."
     fi
 
     install_dependencies
     clone_podman_exporter
-    create_systemd_service_file
-    start_podman_exporter_service
+    create_nohup_script
+    run_nohup_script
+    # create_systemd_service_file
+    # start_podman_exporter_service
 
     echo_with_color "$GREEN_COLOR" "Podman Exporter installation completed successfully."
 }
