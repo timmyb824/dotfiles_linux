@@ -29,16 +29,14 @@ create_systemd_service_file() {
     sudo tee $SERVICE_FILE > /dev/null <<EOL
 [Unit]
 Description=Podman Exporter
-Wants=network-online.target
 After=network-online.target
 
 [Service]
+Type=simple
 User=$USER
-WorkingDirectory=$REPO_LOCATION
 ExecStart=$REPO_LOCATION/bin/prometheus-podman-exporter -a
-Restart=always
-RestartSec=30s
-TimeoutSec=30s
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
