@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+
+##### THIS IS A WORK IN PROGRESS #####
+
 source "$(dirname "${BASH_SOURCE[0]}")/../init/init.sh"
 # Function to print usage
 usage() {
@@ -18,7 +21,7 @@ NAS_PATH=$2
 
 MOUNT_POINT="/mnt/bryantnas"
 NAS_IP="192.168.86.44"
-NAS_USER="your_nas_username"  # Replace with your NAS username
+NAS_USER="tab802"
 NAS_PORT=717
 
 # Check if the local path exists
