@@ -1,40 +1,58 @@
 #!/usr/bin/env bash
 
+# Include the init script
 source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
-# Function to install fonts using the cloned repository
-install_fonts_linux() {
-    local fonts_dir=$1
+# Check if font name is provided as argument
+if [ -z "$1" ]; then
+  exit_with_error "No font specified. Usage: ./fonts.sh <font>"
+fi
 
-    echo_with_color "32" "Installing fonts..."
-    cd "$fonts_dir" || exit_with_error "Could not cd into nerd-fonts directory."
-    for font in "Hack" "FiraCode" "JetBrainsMono"; do
-        ./install.sh "$font" || exit_with_error "Could not install $font."
-    done
-    echo_with_color "32" "Fonts installed."
+# Function to install a Nerd Font
+install_nerd_font() {
+  local FONT_NAME=$1
+  local FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/$FONT_NAME.zip"
+  
+  # Download the font zip file
+  if wget "$FONT_URL" -O "$FONT_NAME.zip"; then
+    echo_with_color "Downloaded $FONT_NAME; attempting to unzip"
+    
+    # Unzip the font zip file
+    if unzip "$FONT_NAME.zip" -d "$FONT_NAME"; then
+      echo_with_color "Unzipped $FONT_NAME; moving to ~/.local/share/fonts"
+      
+      # Move the font to the local fonts directory
+      if mv "$FONT_NAME" ~/.local/share/fonts/; then
+        echo_with_color "Moved $FONT_NAME; removing $FONT_NAME.zip"
+        
+        # Remove the downloaded zip file
+        if rm "$FONT_NAME.zip"; then
+          echo_with_color "Removed $FONT_NAME.zip; updating font cache"
+          
+          # Update the font cache
+          if fc-cache -f -v; then
+            echo_with_color "Successfully installed $FONT_NAME"
+          else
+            exit_with_error "Failed to update font cache"
+          fi
+        else
+          exit_with_error "Failed to remove $FONT_NAME.zip"
+        fi
+      else
+        exit_with_error "Failed to move $FONT_NAME"
+      fi
+    else
+      exit_with_error "Failed to unzip $FONT_NAME.zip"
+    fi
+  else
+    exit_with_error "Failed to download $FONT_NAME"
+  fi
 }
 
-
-# Check if the script is running on Linux
-if [ "$(get_os)" == "Linux" ]; then
-    # Check if 'ghq' is installed and use it to get nerd-fonts
-    if command_exists "ghq"; then
-        ghq get https://github.com/ryanoasis/nerd-fonts
-        nerd_fonts_dir="$(ghq list -p | grep nerd-fonts)"
-        if [ -z "$nerd_fonts_dir" ]; then
-            exit_with_error "Could not find nerd-fonts directory."
-        fi
-        install_fonts_linux "$nerd_fonts_dir"
-    elif command_exists "git"; then
-        # If 'ghq' isn't installed but 'git' is, then clone and install fonts using 'git'
-        echo_with_color "32" "ghq not found. Falling back to git for downloading fonts..."
-        git clone https://github.com/ryanoasis/nerd-fonts "$HOME/nerd-fonts" || exit_with_error "Could not clone nerd-fonts repository."
-        install_fonts_linux "$HOME/nerd-fonts"
-    else
-        # If neither 'ghq' nor 'git' is installed, exit with an error
-        exit_with_error "Neither ghq nor git is installed."
-    fi
-else
-    # If the operating system is not Linux, inform the user and exit
-    echo_with_color "31" "Operating system not supported."
+# Check for required commands
+if ! command_exists unzip || ! command_exists wget || ! command_exists fc-cache; then
+  exit_with_error "unzip, wget, and fc-cache are required"
 fi
+
+# Install the specified font
+install_nerd_font "$1"
