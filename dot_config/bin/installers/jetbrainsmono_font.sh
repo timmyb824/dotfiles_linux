@@ -12,7 +12,7 @@ install_the_font() {
     local font_name="JetBrainsMono"
     local font_version="2.304"
     local font_url="https://download.jetbrains.com/fonts/JetBrainsMono-$font_version.zip"
-    local font_dir="$HOME/.local/share/fonts/$font_name"
+    local font_dir="$HOME/.fonts/$font_name"
     local font_zip="/tmp/JetBrainsMono-$font_version.zip"
 
     # Check if the font is already installed

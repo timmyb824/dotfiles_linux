@@ -22,7 +22,7 @@ install_nerd_font() {
       echo_with_color "Unzipped $FONT_NAME; moving to ~/.local/share/fonts"
       
       # Move the font to the local fonts directory
-      if mv "$FONT_NAME" ~/.local/share/fonts/; then
+      if mv -p "$FONT_NAME" "$HOME/.fonts/"; then
         echo_with_color "Moved $FONT_NAME; removing $FONT_NAME.zip"
         
         # Remove the downloaded zip file
