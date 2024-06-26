@@ -78,6 +78,25 @@ install_supafile() {
     fi
 }
 
+install_oci_cli() {
+  if ! command_exists oci; then
+    echo_with_color "$YELLOW_COLOR" "Oracle Cloud Infrastructure CLI is not installed."
+    ask_yes_or_no "Do you want to install Oracle Cloud Infrastructure CLI?"
+    if [[ "$?" -eq 0 ]]; then
+      if ! bash -c "$(curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh)"; then
+      echo_with_color "$RED_COLOR" "Failed to install Oracle Cloud Infrastructure CLI."
+      else
+      echo_with_color "$GREEN_COLOR" "Oracle Cloud Infrastructure CLI installed successfully."
+      fi
+    else
+      echo_with_color "$GREEN_COLOR" "Skipping Oracle Cloud Infrastructure CLI installation."
+    fi
+      else
+    echo_with_color "$GREEN_COLOR" "Oracle Cloud Infrastructure CLI is already installed."
+      fi
+}
+
+
 # check for dependencies
 if ! command_exists "curl"; then
     echo_with_color "$RED_COLOR" "curl is required"
@@ -87,3 +106,5 @@ install_local_send
 install_plandex_cli
 istall_helix_edtor
 install_supafile
+install_oci_cli
+
