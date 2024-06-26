@@ -83,7 +83,7 @@ install_oci_cli() {
     echo_with_color "$YELLOW_COLOR" "Oracle Cloud Infrastructure CLI is not installed."
     ask_yes_or_no "Do you want to install Oracle Cloud Infrastructure CLI?"
     if [[ "$?" -eq 0 ]]; then
-      if ! bash -c "$(curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh)"; then
+      if ! sudo bash -c "$(curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh)"; then
       echo_with_color "$RED_COLOR" "Failed to install Oracle Cloud Infrastructure CLI."
       else
       echo_with_color "$GREEN_COLOR" "Oracle Cloud Infrastructure CLI installed successfully."
