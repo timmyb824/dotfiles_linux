@@ -54,7 +54,7 @@ add_promtail_to_groups() {
 }
 
 configure_promtail() {
-    local LOKI_URL="$LOKI_URL" # Assuming you pass the Loki URL as the first argument
+    local LOKI_URL="$LOKI_URL"
 
     # Check if a LOKI_URL is provided
     if [ -z "$LOKI_URL" ]; then
@@ -148,7 +148,7 @@ if ! command_exists promtail; then
 
     add_promtail_to_groups
 
-    configure_promtail "https://loki.local.timmybtech.com/loki/api/v1/push"
+    configure_promtail
 
     restart_promtail
 else
