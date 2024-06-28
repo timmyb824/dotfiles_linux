@@ -136,6 +136,7 @@ upgrade_promtail() {
 # create function restart promtail
 restart_promtail() {
     echo_with_color "$GREEN" "Restarting Promtail..."
+    sudo systemctl daemon-reload || echo_with_color "$RED" "Failed to reload systemd."
     sudo systemctl restart promtail || echo_with_color "$RED" "Failed to restart Promtail."
     echo_with_color "$GREEN" "Promtail restarted."
 }
