@@ -45,7 +45,7 @@ create_promtail_user() {
     echo_with_color "$GREEN" "Promtail user found."
 }
 
-add_promtail_to_adm_group() {
+add_promtail_to_groups() {
     echo_with_color "$GREEN" "Adding promtail user to the adm group..."
     sudo usermod -aG adm promtail || echo_with_color "$RED" "Failed to add promtail user to the adm group."
     echo_with_color "$GREEN" "Adding promtail user to the systemd-journal group..."
@@ -141,23 +141,19 @@ restart_promtail() {
 }
 
 if ! command_exists promtail; then
-    # Install Promtail
     install_promtail "$PROMTAIL_VERSION"
 
-    # Create promtail user
     create_promtail_user
 
-    # Add promtail user to the adm group
-    add_promtail_to_adm_group
+    add_promtail_to_groups
 
-    # Configure Promtail
     configure_promtail "https://loki.local.timmybtech.com/loki/api/v1/push"
 
-    # Restart Promtail
     restart_promtail
 else
     # check if the installed version is the same as the desired version
     if [ "$(promtail --version | grep 'promtail, version' | awk '{print $3}')" != "$PROMTAIL_VERSION" ]; then
+        echo_with_color "$YELLOW" "Promtail is already installed but the version is different."
         upgrade_promtail "$PROMTAIL_VERSION"
         restart_promtail
     else
