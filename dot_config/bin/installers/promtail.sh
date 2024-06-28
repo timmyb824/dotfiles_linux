@@ -109,6 +109,29 @@ configure_promtail() {
 EOF
 }
 
+upgrade_promtail() {
+    local version=$1
+    local deb_file="promtail_${version}_amd64.deb"
+    local download_url="https://github.com/grafana/loki/releases/download/v${version}/${deb_file}"
+
+    echo_with_color "$GREEN" "Starting Promtail upgrade..."
+    if ! wget "${download_url}" -O "${deb_file}" 2>/dev/null; then
+        echo_with_color "$RED" "Failed to download Promtail .deb package"
+        return 1
+    fi
+
+    echo_with_color "$GREEN" "Download complete. Upgrading Promtail..."
+    if ! sudo dpkg -i "${deb_file}"; then
+        echo_with_color "$RED" "Failed to upgrade Promtail"
+        sudo apt-get install -f
+    else
+        echo_with_color "$GREEN" "Promtail upgrade completed successfully."
+    fi
+
+    echo_with_color "$GREEN" "Cleaning up..."
+    rm "${deb_file}"
+    echo_with_color "$GREEN" "Cleanup complete."
+}
 
 # create function restart promtail
 restart_promtail() {
@@ -128,10 +151,16 @@ if ! command_exists promtail; then
     add_promtail_to_adm_group
 
     # Configure Promtail
-    configure_promtail "https://loki.timmybtech.com/loki/api/v1/push"
+    configure_promtail "https://loki.local.timmybtech.com/loki/api/v1/push"
 
     # Restart Promtail
     restart_promtail
 else
-    echo_with_color "$YELLOW" "Promtail is already installed. Skipping installation..."
+    # check if the installed version is the same as the desired version
+    if [ "$(promtail --version | grep 'promtail, version' | awk '{print $3}')" != "$PROMTAIL_VERSION" ]; then
+        upgrade_promtail "$PROMTAIL_VERSION"
+        restart_promtail
+    else
+        echo_with_color "$GREEN" "Promtail is already installed and up-to-date."
+    fi
 fi

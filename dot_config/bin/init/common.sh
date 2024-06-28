@@ -37,7 +37,7 @@ export AGE_VERSION="v1.1.1"
 
 export RUBY_VERSION="3.2.1"
 
-export PROMTAIL_VERSION="2.9.5"
+export PROMTAIL_VERSION="2.9.8"
 
 export ATUIN_USER="tbryant"
 
