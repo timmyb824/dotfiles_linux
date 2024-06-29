@@ -174,7 +174,7 @@ symlink_podman_to_docker() {
     fi
 }
 
-enable_and_start_user_podman_service() {
+enable_and_start_rootless_podman_service() {
     echo_with_color "33" "Enabling and starting Podman service..."
     if ! systemctl --user enable --now podman.socket; then
         echo_with_color "31" "Failed to enable and start Podman service."
@@ -201,6 +201,6 @@ else
     install_cni_plugin
     create_config_systemd_user_dir
     symlink_podman_to_docker
-    enable_and_start_user_podman_service
+    enable_and_start_rootless_podman_service
     # enable_and_start_root_podman_service
 fi
