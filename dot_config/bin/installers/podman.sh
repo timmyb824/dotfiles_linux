@@ -174,6 +174,24 @@ symlink_podman_to_docker() {
     fi
 }
 
+enable_and_start_user_podman_service() {
+    echo_with_color "33" "Enabling and starting Podman service..."
+    if ! systemctl --user enable --now podman.socket; then
+        echo_with_color "31" "Failed to enable and start Podman service."
+        return 1
+    fi
+    echo_with_color "32" "Podman service enabled and started successfully."
+}
+
+enable_and_start_root_podman_service() {
+    echo_with_color "33" "Enabling and starting Podman service..."
+    if ! sudo systemctl enable --now podman.socket; then
+        echo_with_color "31" "Failed to enable and start Podman service."
+        return 1
+    fi
+    echo_with_color "32" "Podman service enabled and started successfully."
+}
+
 # Main script execution
 if check_podman_installed; then
     echo_with_color "32" "Skipping installation as Podman is already installed."
@@ -182,4 +200,7 @@ else
     install_podman
     install_cni_plugin
     create_config_systemd_user_dir
+    symlink_podman_to_docker
+    enable_and_start_user_podman_service
+    # enable_and_start_root_podman_service
 fi

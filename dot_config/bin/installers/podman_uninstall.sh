@@ -13,6 +13,24 @@ check_podman_installed() {
     fi
 }
 
+stop_podman_user_services() {
+    # Stop the Podman services
+    if ! systemctl --user stop podman.socket podman.service; then
+        echo_with_color "31" "Failed to stop Podman services."
+        return 1
+    fi
+    echo_with_color "32" "Podman services stopped successfully."
+}
+
+stop_root_podman_services() {
+    # Stop the Podman services
+    if ! sudo systemctl stop podman.socket podman.service; then
+        echo_with_color "31" "Failed to stop Podman services."
+        return 1
+    fi
+    echo_with_color "32" "Podman services stopped successfully."
+}
+
 # Function to uninstall Podman
 uninstall_podman() {
     # Ensure sudo is available
@@ -101,13 +119,15 @@ uninstall_podman() {
         fi
         echo_with_color "32" "Docker symlink removed successfully."
     fi
-    
+
     echo_with_color "32" "Podman and its configurations were completely uninstalled."
 }
 
 # Main script execution
 if check_podman_installed; then
     echo_with_color "33" "Uninstalling Podman..."
+    stop_podman_user_services
+    stop_root_podman_services
     uninstall_podman
 else
     echo_with_color "32" "Podman is not installed. Nothing to do."
