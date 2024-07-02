@@ -96,6 +96,28 @@ install_oci_cli() {
       fi
 }
 
+install_cloudflared_cli() {
+    if ! command_exists cloudflared; then
+        echo_with_color "$YELLOW_COLOR" "Cloudflared CLI is not installed."
+        ask_yes_or_no "Do you want to install Cloudflared CLI?"
+        if [[ "$?" -eq 0 ]]; then
+            sudo mkdir -p --mode=0755 /usr/share/keyrings/ || echo_with_color "$RED_COLOR" "Failed to create keyrings directory."
+            if ! curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null; then
+                echo_with_color "$RED_COLOR" "Failed to download Cloudflared CLI key."
+            else
+                echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflared.list >/dev/null
+                sudo apt-get update || echo_with_color "$RED_COLOR" "Failed to update apt."
+                sudo apt-get install cloudflared -y || echo_with_color "$RED_COLOR" "Failed to install Cloudflared CLI."
+                echo_with_color "$GREEN_COLOR" "Cloudflared CLI installed successfully."
+            fi
+        else
+            echo_with_color "$GREEN_COLOR" "Skipping Cloudflared CLI installation."
+        fi
+    else
+        echo_with_color "$GREEN_COLOR" "Cloudflared CLI is already installed."
+    fi
+}
+
 
 # check for dependencies
 if ! command_exists "curl"; then
@@ -107,4 +129,4 @@ install_plandex_cli
 istall_helix_edtor
 install_supafile
 install_oci_cli
-
+install_cloudflared_cli
