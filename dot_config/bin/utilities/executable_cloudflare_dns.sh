@@ -9,7 +9,7 @@ fi
 # if arg is `add` then append 1.1.1.1 to top of resolv.conf
 if [ "$1" == "add" ]; then
   echo "Adding 1.1.1.1 to resolv.conf..."
-  sudo sh -c 'echo "nameserver 1.1.1.1" | cat - /etc/resolv.conf > /tmp/resolv.conf && mv /tmp/resolv.conf /etc/resolv.conf'
+  sudo sh -c 'echo "nameserver 1.1.1.1" | tee /etc/resolv.conf'
   echo "Done"
 fi
 
