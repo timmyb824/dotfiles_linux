@@ -118,6 +118,24 @@ install_cloudflared_cli() {
     fi
 }
 
+install_logdy() {
+    if ! command_exists logdy; then
+        echo_with_color "$YELLOW_COLOR" "Logdy is not installed."
+        ask_yes_or_no "Do you want to install Logdy?"
+        if [[ "$?" -eq 0 ]]; then
+            if ! curl https://logdy.dev/install.sh | sh; then
+                echo_with_color "$RED_COLOR" "Failed to install Logdy."
+            else
+                echo_with_color "$GREEN_COLOR" "Logdy installed successfully."
+            fi
+        else
+            echo_with_color "$GREEN_COLOR" "Skipping Logdy installation."
+        fi
+    else
+        echo_with_color "$GREEN_COLOR" "Logdy is already installed."
+    fi
+}
+
 
 # check for dependencies
 if ! command_exists "curl"; then
@@ -130,3 +148,4 @@ istall_helix_edtor
 install_supafile
 install_oci_cli
 install_cloudflared_cli
+install_logdy
