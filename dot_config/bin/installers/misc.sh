@@ -124,7 +124,7 @@ install_logdy() {
         echo_with_color "$YELLOW_COLOR" "Logdy is not installed."
         ask_yes_or_no "Do you want to install Logdy?"
         if [[ "$?" -eq 0 ]]; then
-            if ! wget https://github.com/logdyhq/logdy-core/releases/download/${logdy_version}/logdy_linux_amd64 -O /usr/local/bin/logdy; then
+            if ! sudo wget https://github.com/logdyhq/logdy-core/releases/download/${logdy_version}/logdy_linux_amd64 -O /usr/local/bin/logdy; then
                 echo_with_color "$RED_COLOR" "Failed to download Logdy."
             else
                 sudo chmod +x /usr/local/bin/logdy
@@ -140,8 +140,8 @@ install_logdy() {
 
 
 # check for dependencies
-if ! command_exists "curl"; then
-    echo_with_color "$RED_COLOR" "curl is required"
+if ! command_exists "curl" && ! command_exists "wget"; then
+    echo_with_color "$RED_COLOR" "curl/wget is required"
 fi
 
 install_local_send
