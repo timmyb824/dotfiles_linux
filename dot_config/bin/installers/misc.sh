@@ -119,13 +119,15 @@ install_cloudflared_cli() {
 }
 
 install_logdy() {
+    local logdy_version="0.12.0"
     if ! command_exists logdy; then
         echo_with_color "$YELLOW_COLOR" "Logdy is not installed."
         ask_yes_or_no "Do you want to install Logdy?"
         if [[ "$?" -eq 0 ]]; then
-            if ! sudo curl https://logdy.dev/install.sh | sh; then
-                echo_with_color "$RED_COLOR" "Failed to install Logdy."
+            if ! wget https://github.com/logdyhq/logdy-core/releases/download/${logdy_version}/logdy_linux_amd64 -O /usr/local/bin/logdy; then
+                echo_with_color "$RED_COLOR" "Failed to download Logdy."
             else
+                sudo chmod +x /usr/local/bin/logdy
                 echo_with_color "$GREEN_COLOR" "Logdy installed successfully."
             fi
         else
