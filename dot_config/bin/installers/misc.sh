@@ -123,7 +123,7 @@ install_logdy() {
         echo_with_color "$YELLOW_COLOR" "Logdy is not installed."
         ask_yes_or_no "Do you want to install Logdy?"
         if [[ "$?" -eq 0 ]]; then
-            if ! curl https://logdy.dev/install.sh | sh; then
+            if ! sudo curl https://logdy.dev/install.sh | sh; then
                 echo_with_color "$RED_COLOR" "Failed to install Logdy."
             else
                 echo_with_color "$GREEN_COLOR" "Logdy installed successfully."
