@@ -38,7 +38,6 @@ confirm_python_and_pip() {
     fi
 }
 
-# Function to install pip packages
 install_pip_packages() {
     while IFS= read -r package; do
         if [ -z "$package" ]; then  # Skip empty lines

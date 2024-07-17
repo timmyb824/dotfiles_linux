@@ -13,7 +13,6 @@ source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 #     fi
 # }
 
-
 install_micro_plugin() {
     local plugin=$1
     output=$(micro -plugin install "$plugin" 2>&1)

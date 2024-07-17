@@ -24,7 +24,6 @@ change_and_run_script() {
     fi
 }
 
-# Main installation process
 echo_with_color "$GREEN_COLOR" "Starting package installations for linux..."
 
 SCRIPT_DIR="dot_config/bin"

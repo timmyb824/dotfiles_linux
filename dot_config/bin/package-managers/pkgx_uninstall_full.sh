@@ -2,7 +2,6 @@
 
 source "$(dirname "$BASH_SOURCE")/../init/init.sh"
 
-# Function to uninstall individual binaries
 uninstall_binary() {
     local bin_path="$1"
     if [[ -f "$bin_path" ]]; then
